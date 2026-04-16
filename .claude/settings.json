@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Program Files/nodejs//**)",
+      "Bash(cmd.exe /c \"where pnpm 2>&1\")",
+      "Bash(cmd.exe /c \"pnpm --version 2>&1\")",
+      "Bash(cmd.exe /c \"npm --version 2>&1\")",
+      "Bash(export PATH=\"/c/Program Files/nodejs:$PATH\")",
+      "Bash(npm --version)",
+      "Bash(export PATH=\"/c/Program Files/nodejs:/c/Users/nyla/AppData/Roaming/npm:$PATH\")",
+      "Bash(pnpm --version)",
+      "Bash(pnpm create:*)",
+      "Bash(pnpm dlx:*)",
+      "Bash(pnpm install:*)",
+      "Bash(pnpm add:*)",
+      "Bash(wait)"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\nyla\\forge\\src\\routes"
+    ]
+  }
+}
