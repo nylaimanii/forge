@@ -3,6 +3,7 @@
 		value?:       string;
 		placeholder?: string;
 		type?:        string;
+		name?:        string;  // html name attr — required for form submissions
 		label?:       string;
 		error?:       string;
 		disabled?:    boolean;
@@ -16,6 +17,7 @@
 		value      = $bindable(''),
 		placeholder = '',
 		type        = 'text',
+		name,
 		label,
 		error,
 		disabled    = false,
@@ -35,6 +37,7 @@
 
 	<input
 		{type}
+		{name}
 		{placeholder}
 		{disabled}
 		{autofocus}

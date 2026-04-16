@@ -2,16 +2,13 @@
 	import type { PageData } from './$types';
 	import { FolderPlus, Plus } from 'lucide-svelte';
 	import ProjectCard from '$components/layout/ProjectCard.svelte';
+	import NewProjectModal from '$components/layout/NewProjectModal.svelte';
 	import Button from '$components/ui/Button.svelte';
 	import EmptyState from '$components/ui/EmptyState.svelte';
-	import { showToast } from '$lib/stores/toasts';
 
 	let { data }: { data: PageData } = $props();
 
-	// stub: real create flow comes next step
-	function handleNewProject() {
-		showToast('project creation coming next step', 'info');
-	}
+	let showNewProject = $state(false);
 </script>
 
 <svelte:head>
@@ -29,7 +26,7 @@
 			your projects
 		</h1>
 
-		<Button variant="primary" size="sm" onclick={handleNewProject}>
+		<Button variant="primary" size="sm" onclick={() => (showNewProject = true)}>
 			{#snippet icon()}
 				<Plus size={14} />
 			{/snippet}
@@ -49,7 +46,7 @@
 				<FolderPlus size={40} strokeWidth={1.25} />
 			{/snippet}
 			{#snippet cta()}
-				<Button variant="primary" size="md" onclick={handleNewProject}>
+				<Button variant="primary" size="md" onclick={() => (showNewProject = true)}>
 					{#snippet icon()}
 						<Plus size={14} />
 					{/snippet}
@@ -73,3 +70,9 @@
 		</div>
 	{/if}
 </div>
+
+<!-- new project modal -->
+<NewProjectModal
+	bind:open={showNewProject}
+	onclose={() => (showNewProject = false)}
+/>
