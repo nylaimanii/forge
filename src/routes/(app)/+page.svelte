@@ -1,87 +1,75 @@
 <script lang="ts">
+	import type { PageData } from './$types';
+	import { FolderPlus, Plus } from 'lucide-svelte';
+	import ProjectCard from '$components/layout/ProjectCard.svelte';
 	import Button from '$components/ui/Button.svelte';
-	import { Plus } from 'lucide-svelte';
-	import { user } from '$lib/stores';
+	import EmptyState from '$components/ui/EmptyState.svelte';
+	import { showToast } from '$lib/stores/toasts';
 
-	// greeting based on time of day
-	const hour = new Date().getHours();
-	const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
+	let { data }: { data: PageData } = $props();
+
+	// stub: real create flow comes next step
+	function handleNewProject() {
+		showToast('project creation coming next step', 'info');
+	}
 </script>
 
 <svelte:head>
 	<title>Dashboard — Forge</title>
 </svelte:head>
 
-<!-- animated gradient mesh background -->
-<div class="fixed inset-0 left-16 top-14 gradient-mesh opacity-40 pointer-events-none"></div>
+<!-- subtle gradient mesh, fixed behind content -->
+<div class="fixed inset-0 left-16 top-14 gradient-mesh opacity-30 pointer-events-none"></div>
 
-<!-- page content -->
-<div class="relative z-10 flex flex-col items-center justify-center min-h-full px-8 py-20">
+<div class="relative z-10 px-8 py-10 max-w-6xl mx-auto">
 
-	<!-- hero block -->
-	<div class="flex flex-col items-center gap-6 text-center max-w-2xl">
-
-		<!-- greeting -->
-		<p
-			class="text-sm text-[var(--color-muted)] font-[var(--font-ui)] animate-fade-up animate-fade-up-1"
-		>
-			{greeting}{$user?.email ? `, ${$user.email.split('@')[0]}` : ''}
-		</p>
-
-		<!-- main headline -->
-		<h1
-			class="text-5xl font-extrabold tracking-tight text-[var(--color-text)] font-[var(--font-display)] leading-[1.1] animate-fade-up animate-fade-up-2"
-		>
-			forge
+	<!-- page header -->
+	<div class="flex items-center justify-between mb-8">
+		<h1 class="text-2xl font-bold text-[var(--color-text)] font-[var(--font-display)] tracking-tight">
+			your projects
 		</h1>
 
-		<!-- tagline -->
-		<p
-			class="text-base text-[var(--color-muted)] font-[var(--font-ui)] max-w-md leading-relaxed animate-fade-up animate-fade-up-3"
+		<Button variant="primary" size="sm" onclick={handleNewProject}>
+			{#snippet icon()}
+				<Plus size={14} />
+			{/snippet}
+			{#snippet children()}
+				New project
+			{/snippet}
+		</Button>
+	</div>
+
+	<!-- project grid or empty state -->
+	{#if data.projects.length === 0}
+		<EmptyState
+			title="no projects yet"
+			description="create your first project to start building your database"
 		>
-			the database builder for developers who care about design.
-			<br />
-			visual schemas. sql. ai. beautiful data cards. infinite canvas.
-		</p>
-
-		<!-- cta -->
-		<div class="flex items-center gap-3 mt-2 animate-fade-up animate-fade-up-4">
-			<Button variant="primary" size="lg">
-				{#snippet icon()}
-					<Plus size={16} />
-				{/snippet}
-				{#snippet children()}
-					New project
-				{/snippet}
-			</Button>
-			<Button variant="secondary" size="lg">
-				{#snippet children()}
-					Browse projects
-				{/snippet}
-			</Button>
+			{#snippet icon()}
+				<FolderPlus size={40} strokeWidth={1.25} />
+			{/snippet}
+			{#snippet cta()}
+				<Button variant="primary" size="md" onclick={handleNewProject}>
+					{#snippet icon()}
+						<Plus size={14} />
+					{/snippet}
+					{#snippet children()}
+						New project
+					{/snippet}
+				</Button>
+			{/snippet}
+		</EmptyState>
+	{:else}
+		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+			{#each data.projects as project, i (project.id)}
+				<ProjectCard
+					id={project.id}
+					name={project.name}
+					color={project.color ?? '#6c63ff'}
+					updatedAt={project.updated_at}
+					index={i}
+				/>
+			{/each}
 		</div>
-
-		<!-- sub-note: next phase -->
-		<p class="text-xs text-[var(--color-muted)]/50 font-[var(--font-body)] mt-4 animate-fade-up animate-fade-up-5">
-			project management coming in phase 2 →
-		</p>
-	</div>
-
-	<!-- four pillars cards -->
-	<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-20 w-full max-w-3xl animate-fade-up animate-fade-up-5">
-		{#each [
-			{ label: 'Schema Builder', desc: 'Visual ERD + SQL + AI', color: 'var(--color-accent)' },
-			{ label: 'SQL Editor',     desc: 'Monaco-powered query runner', color: 'var(--color-cyan)' },
-			{ label: 'Visualize',      desc: 'Cards, charts, table view', color: '#a78bfa' },
-			{ label: 'Whiteboard',     desc: 'Live data on infinite canvas', color: 'var(--color-danger)' },
-		] as pillar}
-			<div
-				class="glass rounded-xl p-4 flex flex-col gap-2 border border-[var(--color-border)] hover:border-[var(--color-accent)]/30 transition-all duration-200 group"
-			>
-				<div class="w-2 h-2 rounded-full" style="background:{pillar.color}; box-shadow: 0 0 8px {pillar.color}"></div>
-				<h3 class="text-sm font-semibold text-[var(--color-text)] font-[var(--font-display)]">{pillar.label}</h3>
-				<p class="text-xs text-[var(--color-muted)] font-[var(--font-ui)]">{pillar.desc}</p>
-			</div>
-		{/each}
-	</div>
+	{/if}
 </div>
