@@ -39,9 +39,13 @@
 	onMount(async () => {
 		if (!editorContainer) return;
 
+		// pre-fill from ?sql= query param (set by AI mode "run in SQL editor" button)
+		const paramSQL  = $page.url.searchParams.get('sql');
+		const initialSQL = paramSQL?.trim() || DEFAULT_SQL;
+
 		editor = await initMonaco(editorContainer, {
 			language:              'sql',
-			value:                 DEFAULT_SQL,
+			value:                 initialSQL,
 			fontSize:              13,
 			fontFamily:            'DM Mono, monospace',
 			lineHeight:            20,

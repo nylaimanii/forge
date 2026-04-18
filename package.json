@@ -24,6 +24,7 @@
 		"@monaco-editor/loader": "^1.7.0",
 		"@supabase/ssr": "^0.10.2",
 		"@supabase/supabase-js": "^2.103.3",
+		"groq-sdk": "^1.1.2",
 		"lucide-svelte": "^1.0.1",
 		"tldraw": "^4.5.9"
 	}
