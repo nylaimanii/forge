@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import Tooltip from '$components/ui/Tooltip.svelte';
 	import {
 		LayoutDashboard,
@@ -13,7 +13,7 @@
 
 	// nav items — icon + label + route
 	const navItems = [
-		{ icon: LayoutDashboard, label: 'Dashboard',   href: '/'           },
+		{ icon: LayoutDashboard, label: 'Dashboard',   href: '/dashboard'  },
 		{ icon: Database,        label: 'Schema',       href: '/schema'     },
 		{ icon: Code,            label: 'SQL Editor',   href: '/sql'        },
 		{ icon: Sparkles,        label: 'AI Mode',      href: '/ai'         },
@@ -22,11 +22,10 @@
 	];
 
 	// active route detection
-	let currentPath = $derived($page.url.pathname);
+	let currentPath = $derived(page.url.pathname);
 
 	function isActive(href: string) {
-		if (href === '/') return currentPath === '/';
-		return currentPath.startsWith(href);
+		return currentPath === href || currentPath.startsWith(href + '/');
 	}
 </script>
 
@@ -34,9 +33,9 @@
 
 	<!-- forge logo mark -->
 	<a
-		href="/"
-		class="w-9 h-9 mb-6 flex items-center justify-center rounded-xl bg-[var(--color-accent)] text-white font-[var(--font-display)] font-bold text-lg hover:shadow-[0_0_24px_var(--color-accent-glow)] transition-all duration-200"
-		aria-label="Forge home"
+		href="/dashboard"
+		class="w-9 h-9 mb-6 flex items-center justify-center rounded-xl bg-[var(--color-accent)] text-[#09090b] font-[var(--font-display)] font-bold text-lg hover:shadow-[0_0_24px_var(--color-accent-glow)] transition-all duration-200"
+		aria-label="Forge dashboard"
 	>
 		f
 	</a>

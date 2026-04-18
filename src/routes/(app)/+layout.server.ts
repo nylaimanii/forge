@@ -1,10 +1,9 @@
 import type { LayoutServerLoad } from './$types';
 import { redirect } from '@sveltejs/kit';
 
-export const load: LayoutServerLoad = async ({ locals }) => {
-	// hooks.server.ts already redirects globally, but we double-guard here
-	// in case the (app) group is accessed in a way that bypasses the hook
-	if (!locals.session) {
+export const load: LayoutServerLoad = async ({ locals, url }) => {
+	// allow unauthenticated access to the public homepage at /
+	if (!locals.session && url.pathname !== '/') {
 		throw redirect(303, '/login');
 	}
 

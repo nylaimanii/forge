@@ -1,36 +1,41 @@
-/* ─── google fonts ──────────────────────────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Outfit:wght@300;400;500;600;700&display=swap');
+/* ─── fonts ──────────────────────────────────────────────────────────────────── */
+@import url('https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@400,500,600,700,800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap');
 
 /* ─── tailwind v4 ───────────────────────────────────────────────────────────── */
 @import "tailwindcss";
 
 /* ─── forge design tokens ───────────────────────────────────────────────────── */
 @theme {
-  /* backgrounds */
-  --color-bg:        #08080f;
-  --color-surface-1: #0f0f1a;
-  --color-surface-2: #16162a;
+  /* backgrounds — deep obsidian */
+  --color-bg:        #09090b;
+  --color-surface-1: #111114;
+  --color-surface-2: #1a1a1d;
 
   /* borders */
-  --color-border:    #ffffff0f;
-  --color-border-subtle: #ffffff06;
+  --color-border:        #ffffff0e;
+  --color-border-subtle: #ffffff07;
 
   /* text */
-  --color-text:      #f0f0ff;
-  --color-muted:     #6b6b8a;
+  --color-text:  #fafaf9;
+  --color-muted: #71717a;
 
-  /* accents */
-  --color-accent:     #6c63ff;
-  --color-accent-glow: #6c63ff40;
-  --color-cyan:       #00f5d4;
-  --color-cyan-glow:  #00f5d420;
-  --color-danger:     #ff4d6d;
-  --color-danger-glow: #ff4d6d30;
+  /* electric amber accent */
+  --color-accent:      #f59e0b;
+  --color-accent-glow: #f59e0b35;
+
+  /* secondary warm amber */
+  --color-secondary:      #fde68a;
+  --color-secondary-glow: #fde68a20;
+
+  /* danger */
+  --color-danger:      #ef4444;
+  --color-danger-glow: #ef444430;
 
   /* typography */
-  --font-display: 'Syne', system-ui, sans-serif;
-  --font-body:    'DM Mono', 'Courier New', monospace;
-  --font-ui:      'Outfit', system-ui, sans-serif;
+  --font-display: 'Cabinet Grotesk', system-ui, sans-serif;
+  --font-body:    'JetBrains Mono', 'Courier New', monospace;
+  --font-ui:      'Inter', system-ui, sans-serif;
 
   /* radii */
   --radius-sm:  4px;
@@ -69,14 +74,13 @@ body {
 }
 
 /* ─── noise texture overlay ─────────────────────────────────────────────────── */
-/* subtle grain applied to the entire background */
 body::before {
   content: '';
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.035;
+  opacity: 0.03;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
   background-repeat: repeat;
   background-size: 200px 200px;
@@ -131,9 +135,6 @@ body > * {
 .glow-accent {
   box-shadow: 0 0 20px var(--color-accent-glow);
 }
-.glow-cyan {
-  box-shadow: 0 0 20px var(--color-cyan-glow);
-}
 .glow-danger {
   box-shadow: 0 0 20px var(--color-danger-glow);
 }
@@ -160,7 +161,7 @@ body > * {
 .animate-fade-up-4 { animation-delay: 180ms; }
 .animate-fade-up-5 { animation-delay: 240ms; }
 
-/* gradient mesh animation (used on dashboard) */
+/* gradient mesh animation (used on dashboard + homepage) */
 @keyframes mesh-shift {
   0%   { background-position: 0% 50%; }
   50%  { background-position: 100% 50%; }
@@ -168,9 +169,9 @@ body > * {
 }
 
 .gradient-mesh {
-  background: radial-gradient(ellipse at 20% 20%, #6c63ff18 0%, transparent 50%),
-              radial-gradient(ellipse at 80% 80%, #00f5d412 0%, transparent 50%),
-              radial-gradient(ellipse at 50% 50%, #ff4d6d08 0%, transparent 60%);
+  background: radial-gradient(ellipse at 20% 20%, #f59e0b12 0%, transparent 50%),
+              radial-gradient(ellipse at 80% 80%, #fde68a08 0%, transparent 50%),
+              radial-gradient(ellipse at 50% 50%, #ef444408 0%, transparent 60%);
   background-size: 200% 200%;
   animation: mesh-shift 12s ease infinite;
 }
