@@ -25,9 +25,12 @@
 		onheadermousedown:  (e: MouseEvent) => void;
 		onselect:           () => void;
 		onaddfield:         () => void;
+		drawMode?:          boolean;
+		highlightFieldId?:  string | null;
+		onfieldclick?:      (payload: { tableId: string; fieldId: string }) => void;
 	}
 
-	let { table, selected, onheadermousedown, onselect, onaddfield }: Props = $props();
+	let { table, selected, onheadermousedown, onselect, onaddfield, drawMode = false, highlightFieldId = null, onfieldclick }: Props = $props();
 
 	// pick a deterministic accent color from the table name
 	const PALETTE = ['#6c63ff', '#00f5d4', '#ff4d6d', '#ffb84d', '#7dd87d', '#b784ff'];
@@ -84,7 +87,22 @@
 	<!-- field list -->
 	<div class="py-1">
 		{#each sortedFields as field (field.id)}
-			<div class="flex items-center gap-2 px-3 py-1.5 group/field">
+			<div
+				class="
+					flex items-center gap-2 px-3 py-1.5 group/field transition-colors
+					{drawMode ? 'cursor-pointer' : ''}
+					{drawMode && highlightFieldId === field.id ? 'bg-[var(--color-accent-glow)]' : ''}
+					{drawMode && highlightFieldId !== field.id ? 'hover:bg-white/5' : ''}
+				"
+				role={drawMode ? 'button' : undefined}
+				tabindex={drawMode ? 0 : undefined}
+				onclick={drawMode
+					? (e) => { e.stopPropagation(); onfieldclick?.({ tableId: table.id, fieldId: field.id }); }
+					: undefined}
+				onkeydown={drawMode
+					? (e) => { if (e.key === 'Enter') onfieldclick?.({ tableId: table.id, fieldId: field.id }); }
+					: undefined}
+			>
 				<!-- primary key icon -->
 				{#if field.is_primary}
 					<Key size={10} class="text-[var(--color-accent)] shrink-0" />

@@ -1,12 +1,24 @@
 <script lang="ts">
 	import { deserialize } from '$app/forms';
 	import type { PageData } from './$types';
-	import { ZoomIn, ZoomOut, Maximize2, Plus } from 'lucide-svelte';
+	import { ZoomIn, ZoomOut, Maximize2, Plus, GitBranch, Download } from 'lucide-svelte';
 	import TableCard from '$components/schema/TableCard.svelte';
 	import FieldEditor from '$components/schema/FieldEditor.svelte';
+	import RelationshipLayer from '$components/schema/RelationshipLayer.svelte';
+	import RelationshipTypePopover from '$components/schema/RelationshipTypePopover.svelte';
+	import SQLExportModal from '$components/schema/SQLExportModal.svelte';
 	import Button from '$components/ui/Button.svelte';
 	import { showToast } from '$lib/stores/toasts';
 	import type { SchemaTable, SchemaField } from '$components/schema/TableCard.svelte';
+
+	interface Relationship {
+		id:            string;
+		from_table_id: string;
+		from_field_id: string;
+		to_table_id:   string;
+		to_field_id:   string;
+		relation_type: string;
+	}
 
 	let { data }: { data: PageData } = $props();
 
@@ -18,6 +30,13 @@
 			...t,
 			fields: [...(t.fields ?? [])].sort((a: SchemaField, b: SchemaField) => a.position - b.position),
 		}));
+	});
+
+	// ── relationship state ────────────────────────────────────────────────────
+	let relationships = $state<Relationship[]>([]);
+
+	$effect(() => {
+		relationships = data.relationships ?? [];
 	});
 
 	// ── canvas pan + zoom ─────────────────────────────────────────────────────
@@ -68,6 +87,7 @@
 	} | null = $state(null);
 
 	function startTableDrag(e: MouseEvent, table: SchemaTable) {
+		if (drawMode) return; // don't drag in draw mode
 		e.preventDefault();
 		isDraggingTable = true;
 		dragState = {
@@ -123,6 +143,8 @@
 	let selectedTable = $derived(tables.find((t) => t.id === selectedTableId) ?? null);
 
 	function handleCanvasClick(e: MouseEvent) {
+		// close context menu if open
+		if (ctxMenu) { ctxMenu = null; return; }
 		// deselect when clicking the canvas background
 		if (!(e.target as Element).closest('[data-table-node]')) {
 			selectedTableId = null;
@@ -142,6 +164,10 @@
 			const result = deserialize(await res.text());
 			if (result.type === 'success') {
 				tables = tables.filter((t) => t.id !== tableId);
+				// also remove any relationships involving this table
+				relationships = relationships.filter(
+					(r) => r.from_table_id !== tableId && r.to_table_id !== tableId
+				);
 				if (selectedTableId === tableId) selectedTableId = null;
 				showToast('table deleted', 'success');
 			} else {
@@ -179,16 +205,127 @@
 
 	let zoomPercent = $derived(Math.round(zoom * 100));
 
+	// ── draw mode (relationship drawing) ─────────────────────────────────────
+	let drawMode     = $state(false);
+	let pendingFrom: { tableId: string; fieldId: string } | null = $state(null);
+
 	// ── dot grid background tracks pan ───────────────────────────────────────
-	// background-position shifts with pan (mod by tile size to prevent drift)
 	let dotBgPos  = $derived(`${panX % 24}px ${panY % 24}px`);
-	// pre-compute cursor so we don't put a ternary inside the style attribute string
-	let cursorStyle = $derived(isPanning || isDraggingTable ? 'grabbing' : 'default');
-	// the svg data url uses single quotes internally, so the outer url() uses single quotes too
+	let cursorStyle = $derived(
+		drawMode        ? 'crosshair' :
+		isPanning || isDraggingTable ? 'grabbing' : 'default'
+	);
 	const DOT_GRID = "url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2724%27 height=%2724%27%3E%3Ccircle cx=%271%27 cy=%271%27 r=%271%27 fill=%27%23ffffff08%27/%3E%3C/svg%3E')";
+
+	function toggleDrawMode() {
+		drawMode    = !drawMode;
+		pendingFrom = null;
+	}
+
+	// ── relationship type popover ─────────────────────────────────────────────
+	let showRelTypePopover = $state(false);
+	let pendingRel: { from_table_id: string; from_field_id: string; to_table_id: string; to_field_id: string } | null = $state(null);
+
+	function handleFieldClick(payload: { tableId: string; fieldId: string }) {
+		if (!drawMode) return;
+
+		if (!pendingFrom) {
+			// first click — record source
+			pendingFrom = { tableId: payload.tableId, fieldId: payload.fieldId };
+			showToast('now click the target field', 'success');
+			return;
+		}
+
+		// prevent self-loop
+		if (pendingFrom.fieldId === payload.fieldId) {
+			showToast('pick a different field', 'error');
+			return;
+		}
+
+		pendingRel = {
+			from_table_id: pendingFrom.tableId,
+			from_field_id: pendingFrom.fieldId,
+			to_table_id:   payload.tableId,
+			to_field_id:   payload.fieldId,
+		};
+		pendingFrom        = null;
+		showRelTypePopover = true;
+	}
+
+	async function confirmRelationship(type: string) {
+		showRelTypePopover = false;
+		if (!pendingRel) return;
+
+		const body = new URLSearchParams({
+			from_table_id: pendingRel.from_table_id,
+			from_field_id: pendingRel.from_field_id,
+			to_table_id:   pendingRel.to_table_id,
+			to_field_id:   pendingRel.to_field_id,
+			relation_type: type,
+		});
+
+		const res    = await fetch('?/createRelationship', {
+			method:  'POST',
+			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+			body,
+		});
+		const result = deserialize(await res.text());
+
+		if (result.type === 'success' && result.data?.relationship) {
+			relationships = [...relationships, result.data.relationship as Relationship];
+			showToast('relationship created', 'success');
+		} else {
+			showToast('failed to create relationship', 'error');
+		}
+		pendingRel = null;
+	}
+
+	function cancelRelationship() {
+		showRelTypePopover = false;
+		pendingRel         = null;
+		pendingFrom        = null;
+	}
+
+	// ── relationship right-click context menu ─────────────────────────────────
+	interface CtxMenu { x: number; y: number; relId: string }
+	let ctxMenu = $state<CtxMenu | null>(null);
+
+	function handleRelRightClick(e: MouseEvent, relId: string) {
+		e.preventDefault();
+		ctxMenu = { x: e.clientX, y: e.clientY, relId };
+	}
+
+	async function deleteRelationship(relId: string) {
+		ctxMenu = null;
+		const res    = await fetch('?/deleteRelationship', {
+			method:  'POST',
+			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+			body:    new URLSearchParams({ id: relId }),
+		});
+		const result = deserialize(await res.text());
+		if (result.type === 'success') {
+			relationships = relationships.filter((r) => r.id !== relId);
+			showToast('relationship deleted', 'success');
+		} else {
+			showToast('failed to delete relationship', 'error');
+		}
+	}
+
+	// ── SQL export modal ──────────────────────────────────────────────────────
+	let showSQL = $state(false);
+
+	// ── global escape key ─────────────────────────────────────────────────────
+	function handleWindowKeydown(e: KeyboardEvent) {
+		if (e.key === 'Escape') {
+			if (ctxMenu)           { ctxMenu = null; return; }
+			if (showRelTypePopover) { cancelRelationship(); return; }
+			if (drawMode)          { drawMode = false; pendingFrom = null; return; }
+			if (showSQL)           { showSQL = false; return; }
+		}
+	}
 </script>
 
-<svelte:window onmousemove={handleMouseMove} onmouseup={handleMouseUp} />
+<svelte:window onmousemove={handleMouseMove} onmouseup={handleMouseUp} onkeydown={handleWindowKeydown} />
 
 <!-- canvas fills remaining viewport below topbar + tab bar -->
 <div
@@ -200,7 +337,7 @@
 	onwheel={handleWheel}
 	role="presentation"
 >
-	<!-- canvas layer: all table nodes live here, transformed for pan+zoom -->
+	<!-- canvas layer: all table nodes + relationship SVG live here, transformed for pan+zoom -->
 	<div
 		style="
 			position: absolute;
@@ -209,13 +346,23 @@
 			transform-origin: 0 0;
 		"
 	>
+		<!-- relationship SVG (rendered below table cards) -->
+		<RelationshipLayer
+			{tables}
+			{relationships}
+			onrightclick={handleRelRightClick}
+		/>
+
 		{#each tables as table (table.id)}
 			<TableCard
 				{table}
 				selected={selectedTableId === table.id}
 				onheadermousedown={(e) => startTableDrag(e, table)}
-				onselect={() => (selectedTableId = table.id)}
+				onselect={() => { if (!drawMode) selectedTableId = table.id; }}
 				onaddfield={() => (selectedTableId = table.id)}
+				{drawMode}
+				highlightFieldId={pendingFrom?.tableId === table.id ? pendingFrom.fieldId : null}
+				onfieldclick={handleFieldClick}
 			/>
 		{/each}
 	</div>
@@ -230,6 +377,22 @@
 		>
 			{#snippet icon()}<Plus size={13} />{/snippet}
 			{#snippet children()}{creating ? 'adding...' : 'add table'}{/snippet}
+		</Button>
+
+		<!-- draw relationship mode toggle -->
+		<Button
+			variant={drawMode ? 'primary' : 'ghost'}
+			size="sm"
+			onclick={toggleDrawMode}
+		>
+			{#snippet icon()}<GitBranch size={13} />{/snippet}
+			{#snippet children()}{drawMode ? (pendingFrom ? 'pick target...' : 'drawing') : 'add relation'}{/snippet}
+		</Button>
+
+		<!-- SQL export -->
+		<Button variant="ghost" size="sm" onclick={() => (showSQL = true)}>
+			{#snippet icon()}<Download size={13} />{/snippet}
+			{#snippet children()}export SQL{/snippet}
 		</Button>
 
 		<Button variant="ghost" size="sm" onclick={fitView}>
@@ -259,6 +422,17 @@
 		</div>
 	</div>
 
+	<!-- draw mode banner -->
+	{#if drawMode}
+		<div class="absolute top-3 left-1/2 -translate-x-1/2 z-10 pointer-events-none">
+			<div class="glass border border-[var(--color-accent)] rounded-lg px-3 py-1.5">
+				<p class="text-xs text-[var(--color-accent)] font-[var(--font-ui)]">
+					{pendingFrom ? 'click the target field to complete the relationship' : 'click a field to start drawing a relationship — esc to cancel'}
+				</p>
+			</div>
+		</div>
+	{/if}
+
 	<!-- empty canvas hint -->
 	{#if tables.length === 0 && !creating}
 		<div class="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -269,12 +443,47 @@
 			</div>
 		</div>
 	{/if}
+
+	<!-- relationship right-click context menu -->
+	{#if ctxMenu}
+		<div
+			class="fixed z-50 glass border border-[var(--color-border)] rounded-lg py-1 shadow-xl min-w-[140px]"
+			style="left: {ctxMenu.x}px; top: {ctxMenu.y}px;"
+			role="menu"
+		>
+			<button
+				type="button"
+				role="menuitem"
+				onclick={() => deleteRelationship(ctxMenu!.relId)}
+				class="flex items-center gap-2 w-full px-3 py-2 text-xs text-[var(--color-danger)] hover:bg-[var(--color-danger-glow)] transition-colors font-[var(--font-ui)]"
+			>
+				delete relationship
+			</button>
+		</div>
+	{/if}
 </div>
 
 <!-- field editor panel (slides in from right when a table is selected) -->
-<FieldEditor
-	table={selectedTable}
-	onclose={() => (selectedTableId = null)}
-	ondelete={handleDeleteTable}
-	onsave={handleFieldSave}
+{#if !drawMode}
+	<FieldEditor
+		table={selectedTable}
+		onclose={() => (selectedTableId = null)}
+		ondelete={handleDeleteTable}
+		onsave={handleFieldSave}
+	/>
+{/if}
+
+<!-- relationship type popover -->
+<RelationshipTypePopover
+	open={showRelTypePopover}
+	onconfirm={confirmRelationship}
+	oncancel={cancelRelationship}
+/>
+
+<!-- SQL export modal -->
+<SQLExportModal
+	open={showSQL}
+	{tables}
+	{relationships}
+	onclose={() => (showSQL = false)}
 />
