@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e \"const p=require\\('./node_modules/tldraw/package.json'\\); console.log\\('version:',p.version\\); console.log\\('peerDeps:',JSON.stringify\\(p.peerDependencies||{}\\)\\); const ex=p.exports||{}; console.log\\('exports:',Object.keys\\(ex\\).slice\\(0,15\\)\\);\")",
+      "Bash(node -e \"const p=require\\('./node_modules/tldraw/package.json'\\); console.log\\('version:',p.version\\); console.log\\('peerDeps:',JSON.stringify\\(p.peerDependencies||{}\\)\\); const ex=p.exports||{}; console.log\\('exports keys:',Object.keys\\(ex\\).slice\\(0,15\\)\\);\")",
+      "Bash(node -e \"const p=require\\('./node_modules/tldraw/package.json'\\); const main=p.exports['.']; console.log\\('main export:',JSON.stringify\\(main,null,2\\)\\);\")"
+    ]
+  }
+}
