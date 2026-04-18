@@ -5,6 +5,22 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
 	plugins: [
 		tailwindcss(),
-		sveltekit()
-	]
+		sveltekit(),
+	],
+	optimizeDeps: {
+		include: ['tldraw', '@monaco-editor/loader'],
+	},
+	build: {
+		rollupOptions: {
+			output: {
+				manualChunks: (id: string) => {
+					if (id.includes('node_modules/tldraw') || id.includes('node_modules/@tldraw')) return 'tldraw';
+					if (id.includes('node_modules/@monaco-editor') || id.includes('node_modules/monaco-editor')) return 'monaco';
+				},
+			},
+		},
+	},
+	ssr: {
+		noExternal: ['tldraw'],
+	},
 });
