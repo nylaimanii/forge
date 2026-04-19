@@ -2,19 +2,66 @@ import type { PageServerLoad, Actions } from './$types';
 import { fail } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ locals }) => {
+	const userId = locals.session!.user.id;
+
 	// fetch all projects for the logged-in user, newest first
 	const { data: projects, error } = await locals.supabase
 		.from('projects')
 		.select('*')
-		.eq('user_id', locals.session!.user.id)
+		.eq('user_id', userId)
 		.order('updated_at', { ascending: false });
 
 	if (error) {
 		console.error('failed to load projects:', error.message);
-		return { projects: [] };
+		return { projects: [], totalTables: 0, totalQueries: 0, recentActivity: [] };
 	}
 
-	return { projects: projects ?? [] };
+	const projectList = projects ?? [];
+	const projectIds = projectList.map((p) => p.id);
+
+	// parallel: table counts + total query count + recent activity
+	const [tablesRes, queryCountRes, recentRes] = await Promise.all([
+		// all schema_tables for user's projects — aggregate in JS
+		projectIds.length > 0
+			? locals.supabase.from('schema_tables').select('project_id').in('project_id', projectIds)
+			: Promise.resolve({ data: [], error: null }),
+
+		// total query count
+		locals.supabase
+			.from('query_history')
+			.select('*', { count: 'exact', head: true })
+			.eq('user_id', userId),
+
+		// last 5 queries with project name
+		locals.supabase
+			.from('query_history')
+			.select('id, sql, ran_at, project_id, project:projects(name)')
+			.eq('user_id', userId)
+			.order('ran_at', { ascending: false })
+			.limit(5),
+	]);
+
+	// build per-project table count map
+	const tableCountByProject: Record<string, number> = {};
+	for (const row of tablesRes.data ?? []) {
+		tableCountByProject[row.project_id] = (tableCountByProject[row.project_id] ?? 0) + 1;
+	}
+
+	const totalTables = (tablesRes.data ?? []).length;
+	const totalQueries = queryCountRes.count ?? 0;
+
+	// attach tableCount to each project
+	const projectsWithCount = projectList.map((p) => ({
+		...p,
+		tableCount: tableCountByProject[p.id] ?? 0,
+	}));
+
+	return {
+		projects: projectsWithCount,
+		totalTables,
+		totalQueries,
+		recentActivity: recentRes.data ?? [],
+	};
 };
 
 export const actions: Actions = {
@@ -54,7 +101,6 @@ export const actions: Actions = {
 		const { error } = await locals.supabase
 			.from('projects')
 			.update({ name, updated_at: new Date().toISOString() })
-			// scope by user_id so users can only rename their own projects
 			.eq('id', id)
 			.eq('user_id', locals.session!.user.id);
 
@@ -76,7 +122,6 @@ export const actions: Actions = {
 		const { error } = await locals.supabase
 			.from('projects')
 			.delete()
-			// scope by user_id — rls also enforces this, but we double-check here
 			.eq('id', id)
 			.eq('user_id', locals.session!.user.id);
 
@@ -85,8 +130,6 @@ export const actions: Actions = {
 			return fail(500, { error: 'failed to delete project — try again' });
 		}
 
-		// on delete cascade in 001_initial.sql handles whiteboards, card_configs,
-		// and query_history cleanup automatically.
 		return { success: true };
 	},
 };

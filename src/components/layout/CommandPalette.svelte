@@ -1,7 +1,11 @@
 <script lang="ts">
 	import { fade, fly } from 'svelte/transition';
 	import { goto } from '$app/navigation';
-	import { Search, LayoutDashboard, Database, Code, Sparkles, Image, PenLine, Plus } from 'lucide-svelte';
+	import { get } from 'svelte/store';
+	import { Search, LayoutDashboard, Database, Code, Sparkles, Image, PenLine, Plus, LogOut, Keyboard, FormInput, Zap } from 'lucide-svelte';
+	import { activeProject } from '$lib/stores';
+	import { showToast } from '$lib/stores/toasts';
+	import { createBrowserSupabase } from '$lib/supabase';
 
 	interface Props {
 		open:     boolean;
@@ -10,18 +14,98 @@
 
 	let { open = $bindable(false), onclose }: Props = $props();
 
-	let query = $state('');
+	let query      = $state('');
 	let inputEl: HTMLInputElement | undefined = $state();
 
-	// all palette actions
+	// ── navigate to a project view (with fallback if no project is open) ──────
+	function toProjectView(view: string) {
+		const proj = get(activeProject);
+		if (proj?.id) {
+			goto(`/project/${proj.id}/${view}`);
+		} else {
+			showToast('open a project first', 'info');
+			goto('/dashboard');
+		}
+	}
+
+	// ── all palette actions ───────────────────────────────────────────────────
 	const allActions = [
-		{ icon: LayoutDashboard, label: 'Go to Dashboard',  shortcut: 'G D', action: () => goto('/') },
-		{ icon: Database,        label: 'Go to Schema',      shortcut: 'G S', action: () => goto('/schema') },
-		{ icon: Code,            label: 'Open SQL Editor',   shortcut: 'G Q', action: () => goto('/sql') },
-		{ icon: Sparkles,        label: 'Open AI Mode',      shortcut: 'G A', action: () => goto('/ai') },
-		{ icon: Image,           label: 'Go to Visualize',   shortcut: 'G V', action: () => goto('/visualize') },
-		{ icon: PenLine,         label: 'Open Whiteboard',   shortcut: 'G W', action: () => goto('/whiteboard') },
-		{ icon: Plus,            label: 'New Project',        shortcut: '⌘N', action: () => {} }, // placeholder
+		{
+			icon: LayoutDashboard,
+			label: 'Go to Dashboard',
+			shortcut: 'G D',
+			action: () => goto('/dashboard'),
+		},
+		{
+			icon: Database,
+			label: 'Go to Schema',
+			shortcut: 'G S',
+			action: () => toProjectView('schema'),
+		},
+		{
+			icon: Code,
+			label: 'Open SQL Editor',
+			shortcut: 'G Q',
+			action: () => toProjectView('sql'),
+		},
+		{
+			icon: Sparkles,
+			label: 'Open AI Mode',
+			shortcut: 'G A',
+			action: () => toProjectView('ai'),
+		},
+		{
+			icon: Image,
+			label: 'Go to Visualize',
+			shortcut: 'G V',
+			action: () => toProjectView('visualize'),
+		},
+		{
+			icon: PenLine,
+			label: 'Open Whiteboard',
+			shortcut: 'G W',
+			action: () => toProjectView('whiteboard'),
+		},
+		{
+			icon: FormInput,
+			label: 'Go to Forms',
+			shortcut: 'G F',
+			action: () => toProjectView('forms'),
+		},
+		{
+			icon: Zap,
+			label: 'Go to Scripts',
+			shortcut: 'G R',
+			action: () => toProjectView('scripts'),
+		},
+		{
+			icon: Plus,
+			label: 'New Project',
+			shortcut: '⌘N',
+			action: () => {
+				showToast('use the dashboard to create a project', 'info');
+				goto('/dashboard');
+			},
+		},
+		{
+			icon: Keyboard,
+			label: 'Keyboard Shortcuts',
+			shortcut: '?',
+			action: () => {
+				// dispatch a custom event that the layout catches via onclose
+				window.dispatchEvent(new CustomEvent('forge:shortcuts'));
+			},
+		},
+		{
+			icon: LogOut,
+			label: 'Sign Out',
+			shortcut: '',
+			action: async () => {
+				const supabase = createBrowserSupabase();
+				await supabase.auth.signOut();
+				goto('/');
+			},
+		},
 	];
 
 	// filter by query
@@ -38,7 +122,6 @@
 		if (open) {
 			query = '';
 			selectedIdx = 0;
-			// focus the input after the transition
 			setTimeout(() => inputEl?.focus(), 50);
 		}
 	});
@@ -60,15 +143,12 @@
 		close();
 	}
 
-	// combined keyboard handler: arrow nav + enter + escape + cmd+k
 	function handleWindow(e: KeyboardEvent) {
-		// cmd+k toggles the palette (parent also wires this, but handle here for safety)
 		if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
 			e.preventDefault();
 			if (open) close();
 			return;
 		}
-		// the rest only applies when the palette is open
 		handleKey(e);
 	}
 </script>
@@ -117,9 +197,11 @@
 						>
 							<action.icon size={15} />
 							<span class="flex-1">{action.label}</span>
-							<kbd class="text-[10px] text-[var(--color-muted)] bg-white/5 border border-[var(--color-border)] rounded px-1.5 py-0.5 font-[var(--font-body)]">
-								{action.shortcut}
-							</kbd>
+							{#if action.shortcut}
+								<kbd class="text-[10px] text-[var(--color-muted)] bg-white/5 border border-[var(--color-border)] rounded px-1.5 py-0.5 font-[var(--font-body)]">
+									{action.shortcut}
+								</kbd>
+							{/if}
 						</button>
 					</li>
 				{:else}

@@ -2,28 +2,36 @@
 	import { page } from '$app/stores';
 	import { onMount, onDestroy } from 'svelte';
 	import type { LayoutData } from './$types';
-	import { Database, Code, Sparkles, Image, PenLine } from 'lucide-svelte';
+	import { Database, Code, Sparkles, Image, PenLine, FormInput, Zap, Settings as SettingsIcon } from 'lucide-svelte';
 	import { activeProject, breadcrumbs } from '$lib/stores';
 
 	let { data, children }: { data: LayoutData; children: import('svelte').Snippet } = $props();
 
-	// tab definitions — order matches the sidebar nav
+	// main tabs — left-aligned
 	const tabs = [
-		{ label: 'Schema',     view: 'schema',     icon: Database,  href: (id: string) => `/project/${id}/schema`     },
-		{ label: 'SQL',        view: 'sql',         icon: Code,      href: (id: string) => `/project/${id}/sql`        },
-		{ label: 'AI',         view: 'ai',          icon: Sparkles,  href: (id: string) => `/project/${id}/ai`         },
-		{ label: 'Visualize',  view: 'visualize',   icon: Image,     href: (id: string) => `/project/${id}/visualize`  },
-		{ label: 'Whiteboard', view: 'whiteboard',  icon: PenLine,   href: (id: string) => `/project/${id}/whiteboard` },
+		{ label: 'Schema',     view: 'schema',     icon: Database,   href: (id: string) => `/project/${id}/schema`     },
+		{ label: 'SQL',        view: 'sql',         icon: Code,       href: (id: string) => `/project/${id}/sql`        },
+		{ label: 'AI',         view: 'ai',          icon: Sparkles,   href: (id: string) => `/project/${id}/ai`         },
+		{ label: 'Visualize',  view: 'visualize',   icon: Image,      href: (id: string) => `/project/${id}/visualize`  },
+		{ label: 'Whiteboard', view: 'whiteboard',  icon: PenLine,    href: (id: string) => `/project/${id}/whiteboard` },
+		{ label: 'Forms',      view: 'forms',       icon: FormInput,  href: (id: string) => `/project/${id}/forms`      },
+		{ label: 'Scripts',    view: 'scripts',     icon: Zap,        href: (id: string) => `/project/${id}/scripts`    },
 	];
+
+	// right-aligned tab (settings)
+	const settingsTab = { label: 'Settings', view: 'settings', icon: SettingsIcon, href: (id: string) => `/project/${id}/settings` };
+
+	// all views for active tab detection
+	const allTabs = [...tabs, settingsTab];
 
 	// derive the active tab from the current URL segment
 	let activeTab = $derived(
-		tabs.find((t) => $page.url.pathname.includes(`/${t.view}`))?.view ?? 'schema'
+		allTabs.find((t) => $page.url.pathname.includes(`/${t.view}`))?.view ?? 'schema'
 	);
 
 	// derive the active tab label for breadcrumbs
 	let activeLabel = $derived(
-		tabs.find((t) => t.view === activeTab)?.label ?? 'Schema'
+		allTabs.find((t) => t.view === activeTab)?.label ?? 'Schema'
 	);
 
 	onMount(() => {
@@ -65,6 +73,7 @@
 	"
 	aria-label="Project views"
 >
+	<!-- main tabs -->
 	{#each tabs as tab}
 		{@const active = activeTab === tab.view}
 		<a
@@ -81,8 +90,32 @@
 			<tab.icon size={14} strokeWidth={active ? 2 : 1.75} />
 			{tab.label}
 
-			<!-- active underline accent -->
 			{#if active}
+				<span class="absolute bottom-0 left-3 right-3 h-0.5 rounded-full bg-[var(--color-electric)]"></span>
+			{/if}
+		</a>
+	{/each}
+
+	<!-- spacer pushes settings to the right -->
+	<div class="flex-1"></div>
+
+	<!-- settings tab — right-aligned -->
+	{#each [settingsTab] as stab}
+		{@const settingActive = activeTab === stab.view}
+		<a
+			href={stab.href(data.project.id)}
+			class="
+				relative flex items-center gap-2 px-3 h-8 rounded-lg text-sm transition-all duration-150 font-[var(--font-ui)]
+				{settingActive
+					? 'text-[var(--color-electric)] bg-[var(--color-electric-dim)]'
+					: 'text-[var(--color-muted)] hover:text-[var(--color-text)] hover:bg-white/5'
+				}
+			"
+			aria-current={settingActive ? 'page' : undefined}
+		>
+			<stab.icon size={14} strokeWidth={settingActive ? 2 : 1.75} />
+			{stab.label}
+			{#if settingActive}
 				<span class="absolute bottom-0 left-3 right-3 h-0.5 rounded-full bg-[var(--color-electric)]"></span>
 			{/if}
 		</a>

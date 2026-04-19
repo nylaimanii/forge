@@ -2,7 +2,7 @@
 	import { page } from '$app/stores';
 	import type { PageData } from './$types';
 	import {
-		TableProperties, CreditCard, BarChart2, UserCircle, RefreshCw
+		TableProperties, CreditCard, BarChart2, UserCircle, RefreshCw, Upload
 	} from 'lucide-svelte';
 	import Button from '$components/ui/Button.svelte';
 	import Badge from '$components/ui/Badge.svelte';
@@ -10,6 +10,7 @@
 	import Tooltip from '$components/ui/Tooltip.svelte';
 	import TableView from '$components/visualize/TableView.svelte';
 	import CardView from '$components/visualize/CardView.svelte';
+	import ImportModal from '$components/visualize/ImportModal.svelte';
 	import type { CardConfig } from '$components/visualize/PokemonCard.svelte';
 	import { showToast } from '$lib/stores/toasts';
 
@@ -19,10 +20,11 @@
 
 	let selectedTable: typeof data.tables[number] | null = $state(null);
 	let viewType   = $state<ViewType>('table');
-	let rows       = $state<any[]>([]);
+	let rows       = $state<unknown[]>([]);
 	let columns    = $state<string[]>([]);
 	let loading    = $state(false);
 	let loadError  = $state('');
+	let importOpen = $state(false);
 
 	// ── load data ─────────────────────────────────────────────────────────────
 	async function loadData() {
@@ -51,14 +53,14 @@
 		}
 
 		rows    = payload.rows ?? [];
-		columns = rows.length > 0 ? Object.keys(rows[0]) : [];
+		columns = rows.length > 0 ? Object.keys(rows[0] as object) : [];
 	}
 
 	// when table selection changes, clear previous data
 	$effect(() => {
 		void selectedTable;
-		rows    = [];
-		columns = [];
+		rows      = [];
+		columns   = [];
 		loadError = '';
 	});
 
@@ -143,7 +145,7 @@
 						>
 							<span class="truncate">{table.name}</span>
 							<Badge color="muted">
-								{#snippet children()}{(table as any).fields?.length ?? 0}{/snippet}
+								{#snippet children()}{(table as { fields?: unknown[] }).fields?.length ?? 0}{/snippet}
 							</Badge>
 						</button>
 					{/each}
@@ -204,6 +206,12 @@
 					{#snippet children()}{loading ? 'loading...' : 'load data'}{/snippet}
 				</Button>
 
+				<!-- import CSV button -->
+				<Button variant="ghost" size="sm" onclick={() => (importOpen = true)}>
+					{#snippet icon()}<Upload size={12} />{/snippet}
+					{#snippet children()}import CSV{/snippet}
+				</Button>
+
 				{#if rows.length > 0}
 					<div class="flex items-center gap-2">
 						<Badge color="cyan">
@@ -249,7 +257,7 @@
 			</div>
 
 		{:else if viewType === 'table'}
-			<TableView {rows} {columns} />
+			<TableView {rows} {columns} tableName={selectedTable.name} />
 
 		{:else if viewType === 'card'}
 			<CardView
@@ -262,3 +270,10 @@
 		{/if}
 	</div>
 </div>
+
+<!-- import CSV modal -->
+<ImportModal
+	open={importOpen}
+	tableName={selectedTable?.name ?? ''}
+	onclose={() => (importOpen = false)}
+/>
