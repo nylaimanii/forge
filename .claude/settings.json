@@ -13,7 +13,8 @@
       "Bash(pnpm dlx:*)",
       "Bash(pnpm install:*)",
       "Bash(pnpm add:*)",
-      "Bash(wait)"
+      "Bash(wait)",
+      "Bash(pnpm build:*)"
     ],
     "additionalDirectories": [
       "C:\\Users\\nyla\\forge\\src\\routes"
