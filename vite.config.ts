@@ -8,13 +8,12 @@ export default defineConfig({
 		sveltekit(),
 	],
 	optimizeDeps: {
-		include: ['tldraw', '@monaco-editor/loader'],
+		include: ['@monaco-editor/loader'],
 	},
 	build: {
 		rollupOptions: {
 			output: {
 				manualChunks: (id: string) => {
-					if (id.includes('node_modules/tldraw') || id.includes('node_modules/@tldraw')) return 'tldraw';
 					if (id.includes('node_modules/@monaco-editor') || id.includes('node_modules/monaco-editor')) return 'monaco';
 				},
 			},

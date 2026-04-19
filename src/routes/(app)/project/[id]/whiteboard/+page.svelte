@@ -75,6 +75,7 @@
 	// ── mount tldraw via React root ───────────────────────────────────────────
 	onMount(async () => {
 		if (!canvasContainer) return;
+		try {
 
 		// import CSS (side-effect)
 		await import('tldraw/tldraw.css');
@@ -223,6 +224,12 @@
 				onMount:    handleTldrawMount,
 			})
 		);
+		} catch (err) {
+			console.error('tldraw failed to load:', err);
+			if (canvasContainer) {
+				canvasContainer.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--color-muted);font-family:var(--font-ui);font-size:14px;flex-direction:column;gap:8px;"><span>whiteboard failed to load</span><span style="font-size:11px;opacity:0.5;">try refreshing the page</span></div>`;
+			}
+		}
 	});
 
 	onDestroy(() => {
