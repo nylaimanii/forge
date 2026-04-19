@@ -55,7 +55,7 @@
 				start building →
 			</a>
 			<a
-				href="/login"
+				href="/demo"
 				class="inline-flex items-center justify-center w-full sm:w-auto h-12 px-6 rounded-lg border border-[var(--color-border-active)] text-[var(--color-text)] font-[var(--font-display)] font-medium text-sm hover:border-[var(--color-electric)]/40 hover:text-[var(--color-electric)] transition-all duration-150"
 			>
 				try a demo →
@@ -246,7 +246,7 @@
 						start building →
 					</a>
 					<a
-						href="/login"
+						href="/demo"
 						class="inline-flex items-center justify-center w-full sm:w-auto h-12 px-6 rounded-lg border border-[var(--color-border-active)] text-[var(--color-text)] font-[var(--font-display)] font-medium text-sm hover:border-[var(--color-electric)]/40 hover:text-[var(--color-electric)] transition-all duration-150"
 					>
 						try a demo →

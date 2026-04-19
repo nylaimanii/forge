@@ -3,7 +3,7 @@ import { redirect } from '@sveltejs/kit';
 import { createServerSupabase } from '$lib/supabase';
 
 // routes that don't need authentication
-const PUBLIC_ROUTES = ['/', '/login', '/signup'];
+const PUBLIC_ROUTES = ['/', '/login', '/signup', '/demo', '/api/ai'];
 
 export const handle: Handle = async ({ event, resolve }) => {
 	// attach supabase client to every request
