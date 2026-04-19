@@ -9,20 +9,22 @@
 	<meta name="description" content="forge is the database builder for developers who think visually. schema, sql, ai, cards, and infinite canvas — in one tool." />
 </svelte:head>
 
-<div class="w-full overflow-x-hidden">
+<div style="width:100%; overflow-x:hidden; background:#05050a;">
 
 <!-- ── HERO ──────────────────────────────────────────────────────────────────── -->
-<section class="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-[var(--color-bg)]">
+<section style="width:100%; min-height:100vh; padding:80px 0; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; overflow:hidden;">
+
 	<!-- electric blue ambient glow -->
 	<div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] rounded-full bg-[var(--color-electric)] opacity-[0.04] blur-[160px] pointer-events-none"></div>
+
 	<!-- dot grid -->
 	<div
 		class="absolute inset-0 opacity-[0.025] pointer-events-none"
-		style="background-image: radial-gradient(circle, rgba(241,245,249,0.8) 1px, transparent 1px); background-size: 28px 28px;"
+		style="background-image:radial-gradient(circle,rgba(241,245,249,0.8) 1px,transparent 1px); background-size:28px 28px;"
 	></div>
 
 	<!-- content -->
-	<div class="relative z-10 flex flex-col items-center text-center px-6 max-w-[760px] mx-auto w-full">
+	<div style="max-width:720px; margin:0 auto; padding:0 24px; width:100%; display:flex; flex-direction:column; align-items:center; text-align:center; position:relative; z-index:10;">
 
 		<!-- wordmark -->
 		<p class="font-[var(--font-body)] text-[11px] text-[var(--color-muted)] tracking-[0.3em] uppercase mb-12 animate-fade-up animate-fade-up-1">
@@ -31,8 +33,8 @@
 
 		<!-- headline -->
 		<h1
-			class="font-[var(--font-display)] font-bold leading-[1.05] tracking-tight mb-8 animate-fade-up animate-fade-up-2 text-center"
-			style="font-size: clamp(2.5rem, 8vw, 5rem);"
+			class="font-[var(--font-display)] font-bold leading-[1.05] tracking-tight mb-8 animate-fade-up animate-fade-up-2"
+			style="font-size:clamp(2.5rem,8vw,5rem); text-align:center;"
 		>
 			<span class="text-[var(--color-text)] block">your database,</span>
 			<span class="text-[var(--color-electric)] italic block">beautifully</span>
@@ -41,7 +43,8 @@
 
 		<!-- subtitle -->
 		<p
-			class="text-[var(--color-muted)] font-[var(--font-ui)] leading-[1.7] mb-10 animate-fade-up animate-fade-up-3 text-[clamp(0.875rem,2vw,1rem)] max-w-[440px] text-center"
+			class="text-[var(--color-muted)] font-[var(--font-ui)] leading-[1.7] mb-10 animate-fade-up animate-fade-up-3"
+			style="font-size:clamp(0.875rem,2vw,1rem); max-width:440px; text-align:center;"
 		>
 			forge is the database builder for developers who think visually. schema, sql, ai, cards, and infinite canvas — in one tool.
 		</p>
@@ -78,22 +81,29 @@
 </section>
 
 <!-- ── FEATURES ───────────────────────────────────────────────────────────────── -->
-<section class="py-16 sm:py-24 lg:py-32">
-	<!-- section heading — centered -->
-	<div class="max-w-[760px] mx-auto px-6 w-full text-center">
+<section style="width:100%; padding:96px 0; border-top:1px solid rgba(255,255,255,0.06);">
+
+	<!-- heading block — centered -->
+	<div style="max-width:720px; margin:0 auto; padding:0 24px; width:100%; text-align:center;">
 		<p class="font-[var(--font-body)] text-[10px] text-[var(--color-electric)] tracking-[0.25em] uppercase mb-4">
 			CAPABILITIES
 		</p>
-		<h2 class="font-[var(--font-display)] font-bold text-[var(--color-text)] mb-3" style="font-size: clamp(1.8rem, 5vw, 3rem);">
+		<h2
+			class="font-[var(--font-display)] font-bold text-[var(--color-text)] mb-3"
+			style="font-size:clamp(1.8rem,5vw,3rem); text-align:center;"
+		>
 			everything in one workspace
 		</h2>
-		<p class="text-[var(--color-muted)] font-[var(--font-ui)] mb-16 text-[clamp(0.875rem,2vw,1rem)]">
+		<p
+			class="text-[var(--color-muted)] font-[var(--font-ui)]"
+			style="font-size:clamp(0.875rem,2vw,1rem); text-align:center; margin-bottom:64px;"
+		>
 			designed for developers who want to move fast and look good doing it.
 		</p>
 	</div>
 
-	<!-- feature cards — left-aligned content -->
-	<div class="max-w-[760px] mx-auto px-6 w-full flex flex-col gap-4">
+	<!-- feature cards — left-aligned content inside each card -->
+	<div style="max-width:720px; margin:0 auto; padding:0 24px; width:100%; display:flex; flex-direction:column; gap:16px;">
 		{#each [
 			{
 				emoji: '🗂',
@@ -112,13 +122,11 @@
 			},
 		] as feat}
 			<div
-				class="group relative flex items-center gap-4 p-6 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-1)] overflow-hidden
-					hover:border-[var(--color-border-active)] hover:-translate-y-0.5
-					hover:shadow-[0_8px_40px_var(--color-electric-glow)]
-					transition-all duration-200 cursor-default"
+				class="group relative rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-1)] overflow-hidden hover:border-[var(--color-border-active)] hover:-translate-y-0.5 hover:shadow-[0_8px_40px_var(--color-electric-glow)] transition-all duration-200 cursor-default"
+				style="display:flex; flex-direction:row; align-items:center; gap:16px; padding:24px;"
 			>
-				<span class="text-5xl shrink-0 leading-none">{feat.emoji}</span>
-				<div class="text-left">
+				<span style="font-size:3rem; flex-shrink:0; line-height:1;">{feat.emoji}</span>
+				<div style="text-align:left; flex:1;">
 					<h3 class="font-[var(--font-display)] font-semibold text-[var(--color-text)] text-lg mb-1.5">
 						{feat.title}
 					</h3>
@@ -127,8 +135,7 @@
 					</p>
 				</div>
 				<span
-					class="absolute right-6 top-1/2 -translate-y-1/2 text-[var(--color-electric)] text-lg
-						opacity-0 group-hover:opacity-100 transition-opacity duration-150"
+					class="absolute right-6 top-1/2 -translate-y-1/2 text-[var(--color-electric)] text-lg opacity-0 group-hover:opacity-100 transition-opacity duration-150"
 				>→</span>
 			</div>
 		{/each}
@@ -136,22 +143,29 @@
 </section>
 
 <!-- ── HOW IT WORKS ───────────────────────────────────────────────────────────── -->
-<section class="py-16 sm:py-24 lg:py-32 border-t border-[var(--color-border)]">
-	<!-- section heading — centered -->
-	<div class="max-w-[760px] mx-auto px-6 w-full text-center">
+<section style="width:100%; padding:96px 0; border-top:1px solid rgba(255,255,255,0.06);">
+
+	<!-- heading block — centered -->
+	<div style="max-width:720px; margin:0 auto; padding:0 24px; width:100%; text-align:center;">
 		<p class="font-[var(--font-body)] text-[10px] text-[var(--color-electric)] tracking-[0.25em] uppercase mb-4">
 			HOW IT WORKS
 		</p>
-		<h2 class="font-[var(--font-display)] font-bold text-[var(--color-text)] mb-3" style="font-size: clamp(1.4rem, 3.5vw, 2.5rem);">
+		<h2
+			class="font-[var(--font-display)] font-bold text-[var(--color-text)] mb-3"
+			style="font-size:clamp(1.4rem,3.5vw,2.5rem); text-align:center;"
+		>
 			from idea to database in 60 seconds
 		</h2>
-		<p class="text-[var(--color-muted)] font-[var(--font-ui)] mb-20 text-[clamp(0.875rem,2vw,1rem)]">
+		<p
+			class="text-[var(--color-muted)] font-[var(--font-ui)]"
+			style="font-size:clamp(0.875rem,2vw,1rem); text-align:center; margin-bottom:80px;"
+		>
 			no yaml. no config files. no reading the docs at 2am.
 		</p>
 	</div>
 
-	<!-- steps — left-aligned content -->
-	<div class="max-w-[760px] mx-auto px-6 w-full flex flex-col gap-16">
+	<!-- steps -->
+	<div style="max-width:720px; margin:0 auto; padding:0 24px; width:100%; display:flex; flex-direction:column; gap:64px;">
 		{#each [
 			{
 				n: 1,
@@ -176,16 +190,20 @@
 			},
 		] as step, i}
 			<div class="flex flex-col {i % 2 === 1 ? 'md:flex-row-reverse' : 'md:flex-row'} gap-8 items-center">
-				<!-- content -->
-				<div class="flex-1 text-left">
-					<span class="inline-flex items-center px-3 py-1 rounded-full bg-[var(--color-surface-2)] border border-[var(--color-border)] text-[var(--color-electric)] font-[var(--font-body)] text-[10px] mb-4">
+
+				<!-- text content -->
+				<div style="flex:1; text-align:left;">
+					<span
+						class="inline-flex items-center rounded-full border border-[var(--color-border)] bg-[var(--color-surface-2)] text-[var(--color-electric)] font-[var(--font-body)] text-[10px] mb-4"
+						style="padding:4px 12px;"
+					>
 						Step {step.n}
 					</span>
 					<h3 class="font-[var(--font-display)] font-semibold text-[var(--color-text)] text-2xl mb-2">
 						{step.title}
 					</h3>
 					<p class="text-[var(--color-muted)] font-[var(--font-ui)] text-sm mb-5">{step.desc}</p>
-					<ul class="flex flex-col gap-2">
+					<ul style="display:flex; flex-direction:column; gap:8px;">
 						{#each step.checks as check}
 							<li class="flex items-center gap-2 text-[var(--color-muted)] font-[var(--font-ui)] text-sm">
 								<span class="text-[var(--color-electric)] font-semibold text-xs shrink-0">✓</span>
@@ -195,29 +213,39 @@
 					</ul>
 				</div>
 
-				<!-- illustration card -->
-				<div class="flex-1">
-					<div class="h-48 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-2)] flex items-center justify-center overflow-hidden">
-						<span class="text-6xl">{step.emoji}</span>
+				<!-- illustration -->
+				<div style="flex:1;">
+					<div
+						class="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-2)] flex items-center justify-center overflow-hidden"
+						style="height:192px;"
+					>
+						<span style="font-size:3.75rem;">{step.emoji}</span>
 					</div>
 				</div>
+
 			</div>
 		{/each}
 	</div>
 </section>
 
 <!-- ── STATS ──────────────────────────────────────────────────────────────────── -->
-<section class="py-16 sm:py-24 lg:py-32">
-	<div class="max-w-[760px] mx-auto px-6 w-full">
-		<div class="rounded-3xl border border-[var(--color-border)] bg-[var(--color-surface-1)] py-16 px-8">
+<section style="width:100%; padding:96px 0;">
+	<div style="max-width:720px; margin:0 auto; padding:0 24px; width:100%;">
+		<div
+			class="rounded-3xl border border-[var(--color-border)] bg-[var(--color-surface-1)]"
+			style="padding:64px 32px;"
+		>
 			<div class="flex flex-col sm:flex-row justify-around gap-8 text-center">
 				{#each [
-					{ value: '5', label: 'core views' },
-					{ value: '∞', label: 'rows you can visualize' },
+					{ value: '5',    label: 'core views' },
+					{ value: '∞',    label: 'rows you can visualize' },
 					{ value: '100%', label: 'free to use' },
 				] as stat}
 					<div>
-						<div class="font-[var(--font-display)] font-bold text-[var(--color-electric)] leading-none mb-2" style="font-size: 72px;">
+						<div
+							class="font-[var(--font-display)] font-bold text-[var(--color-electric)] leading-none mb-2"
+							style="font-size:72px;"
+						>
 							{stat.value}
 						</div>
 						<div class="text-[var(--color-muted)] font-[var(--font-ui)] text-sm">{stat.label}</div>
@@ -229,11 +257,17 @@
 </section>
 
 <!-- ── CTA ────────────────────────────────────────────────────────────────────── -->
-<section class="py-16 sm:py-24 lg:py-32 pb-0">
-	<div class="max-w-[760px] mx-auto px-6 w-full">
+<section style="width:100%; padding:96px 0 0;">
+	<div style="max-width:720px; margin:0 auto; padding:0 24px; width:100%;">
 		<div class="p-px rounded-3xl bg-gradient-to-b from-[var(--color-electric)]/30 via-[var(--color-electric)]/10 to-transparent">
-			<div class="rounded-3xl bg-[var(--color-surface-1)] py-20 px-8 text-center">
-				<h2 class="font-[var(--font-display)] font-bold text-[var(--color-text)] mb-3" style="font-size: clamp(1.8rem, 5vw, 3rem);">
+			<div
+				class="rounded-3xl bg-[var(--color-surface-1)]"
+				style="padding:80px 32px; text-align:center;"
+			>
+				<h2
+					class="font-[var(--font-display)] font-bold text-[var(--color-text)] mb-3"
+					style="font-size:clamp(1.8rem,5vw,3rem); text-align:center;"
+				>
 					ready to build?
 				</h2>
 				<p class="text-[var(--color-muted)] font-[var(--font-ui)] text-sm mb-10">
@@ -253,7 +287,10 @@
 						try a demo →
 					</a>
 				</div>
-				<p class="mt-10 font-[var(--font-body)] text-[10px] text-[var(--color-muted)] tracking-wide">
+				<p
+					class="font-[var(--font-body)] text-[10px] text-[var(--color-muted)] tracking-wide"
+					style="margin-top:40px;"
+				>
 					free forever · supabase + groq · open source soon
 				</p>
 			</div>
@@ -262,7 +299,7 @@
 </section>
 
 <!-- ── FOOTER ─────────────────────────────────────────────────────────────────── -->
-<footer class="py-12 text-center">
+<footer style="padding:48px 0; text-align:center;">
 	<p class="font-[var(--font-body)] text-xs text-[var(--color-muted)]">forge © 2025</p>
 </footer>
 

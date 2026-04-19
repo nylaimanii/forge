@@ -1,9 +1,8 @@
 import type { LayoutServerLoad } from './$types';
 import { redirect } from '@sveltejs/kit';
 
-export const load: LayoutServerLoad = async ({ locals, url }) => {
-	// allow unauthenticated access to the public homepage at /
-	if (!locals.session && url.pathname !== '/') {
+export const load: LayoutServerLoad = async ({ locals }) => {
+	if (!locals.session) {
 		throw redirect(303, '/login');
 	}
 
