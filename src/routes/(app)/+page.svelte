@@ -79,7 +79,7 @@
 
 <!-- ── FEATURES ───────────────────────────────────────────────────────────────── -->
 <section class="py-16 sm:py-24 lg:py-32">
-	<div class="max-w-[760px] mx-auto px-6">
+	<div class="max-w-[760px] mx-auto px-6 text-center">
 		<!-- label -->
 		<p class="font-[var(--font-body)] text-[10px] text-[var(--color-electric)] tracking-[0.25em] uppercase mb-4 text-center">
 			CAPABILITIES
@@ -138,11 +138,11 @@
 
 <!-- ── HOW IT WORKS ───────────────────────────────────────────────────────────── -->
 <section class="py-16 sm:py-24 lg:py-32 border-t border-[var(--color-border)]">
-	<div class="max-w-[760px] mx-auto px-6">
+	<div class="max-w-[760px] mx-auto px-6 text-center">
 		<p class="font-[var(--font-body)] text-[10px] text-[var(--color-electric)] tracking-[0.25em] uppercase mb-4 text-center">
 			HOW IT WORKS
 		</p>
-		<h2 class="font-[var(--font-display)] font-bold text-[var(--color-text)] mb-3 text-center" style="font-size: clamp(1.8rem, 5vw, 3rem);">
+		<h2 class="font-[var(--font-display)] font-bold text-[var(--color-text)] mb-3 text-center" style="font-size: clamp(1.4rem, 3.5vw, 2.5rem);">
 			from idea to database in 60 seconds
 		</h2>
 		<p class="text-[var(--color-muted)] font-[var(--font-ui)] mb-20 text-[clamp(0.875rem,2vw,1rem)] text-center">
@@ -207,7 +207,7 @@
 
 <!-- ── STATS ──────────────────────────────────────────────────────────────────── -->
 <section class="py-16 sm:py-24 lg:py-32">
-	<div class="max-w-[760px] mx-auto px-6">
+	<div class="max-w-[760px] mx-auto px-6 text-center">
 		<div class="rounded-3xl border border-[var(--color-border)] bg-[var(--color-surface-1)] py-16 px-8">
 			<div class="flex flex-col sm:flex-row justify-around gap-8 text-center">
 				{#each [
@@ -229,7 +229,7 @@
 
 <!-- ── CTA ────────────────────────────────────────────────────────────────────── -->
 <section class="py-16 sm:py-24 lg:py-32 pb-0">
-	<div class="max-w-[760px] mx-auto px-6">
+	<div class="max-w-[760px] mx-auto px-6 text-center">
 		<div class="p-px rounded-3xl bg-gradient-to-b from-[var(--color-electric)]/30 via-[var(--color-electric)]/10 to-transparent">
 			<div class="rounded-3xl bg-[var(--color-surface-1)] py-20 px-8 text-center">
 				<h2 class="font-[var(--font-display)] font-bold text-[var(--color-text)] mb-3" style="font-size: clamp(1.8rem, 5vw, 3rem);">

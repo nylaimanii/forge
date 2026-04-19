@@ -96,6 +96,11 @@ body > * {
   z-index: 1;
 }
 
+/* ─── homepage layout ───────────────────────────────────────────────────────── */
+section, .section-inner {
+  width: 100%;
+}
+
 /* ─── custom scrollbar ──────────────────────────────────────────────────────── */
 ::-webkit-scrollbar {
   width: 6px;
