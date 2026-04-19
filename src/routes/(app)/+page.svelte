@@ -175,9 +175,9 @@
 				emoji: '🃏',
 			},
 		] as step, i}
-			<div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center {i % 2 === 1 ? 'md:[direction:rtl]' : ''}">
+			<div class="flex flex-col {i % 2 === 1 ? 'md:flex-row-reverse' : 'md:flex-row'} gap-8 items-center">
 				<!-- content -->
-				<div class="text-left {i % 2 === 1 ? 'md:[direction:ltr]' : ''}">
+				<div class="flex-1 text-left">
 					<span class="inline-flex items-center px-3 py-1 rounded-full bg-[var(--color-surface-2)] border border-[var(--color-border)] text-[var(--color-electric)] font-[var(--font-body)] text-[10px] mb-4">
 						Step {step.n}
 					</span>
@@ -196,7 +196,7 @@
 				</div>
 
 				<!-- illustration card -->
-				<div class="{i % 2 === 1 ? 'md:[direction:ltr]' : ''}">
+				<div class="flex-1">
 					<div class="h-48 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-2)] flex items-center justify-center overflow-hidden">
 						<span class="text-6xl">{step.emoji}</span>
 					</div>
