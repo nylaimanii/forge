@@ -79,135 +79,136 @@
 
 <!-- ── FEATURES ───────────────────────────────────────────────────────────────── -->
 <section class="py-16 sm:py-24 lg:py-32">
-	<div class="max-w-[760px] mx-auto px-6 text-center">
-		<!-- label -->
-		<p class="font-[var(--font-body)] text-[10px] text-[var(--color-electric)] tracking-[0.25em] uppercase mb-4 text-center">
+	<!-- section heading — centered -->
+	<div class="max-w-[760px] mx-auto px-6 w-full text-center">
+		<p class="font-[var(--font-body)] text-[10px] text-[var(--color-electric)] tracking-[0.25em] uppercase mb-4">
 			CAPABILITIES
 		</p>
-		<h2 class="font-[var(--font-display)] font-bold text-[var(--color-text)] mb-3 text-center" style="font-size: clamp(1.8rem, 5vw, 3rem);">
+		<h2 class="font-[var(--font-display)] font-bold text-[var(--color-text)] mb-3" style="font-size: clamp(1.8rem, 5vw, 3rem);">
 			everything in one workspace
 		</h2>
-		<p class="text-[var(--color-muted)] font-[var(--font-ui)] mb-16 text-[clamp(0.875rem,2vw,1rem)] text-center">
+		<p class="text-[var(--color-muted)] font-[var(--font-ui)] mb-16 text-[clamp(0.875rem,2vw,1rem)]">
 			designed for developers who want to move fast and look good doing it.
 		</p>
+	</div>
 
-		<div class="flex flex-col gap-4">
-			{#each [
-				{
-					emoji: '🗂',
-					title: 'visual schema builder',
-					desc: 'drag tables, draw relationships, export sql. no orm config. no migration hell. just a canvas and your ideas.',
-				},
-				{
-					emoji: '✦',
-					title: 'ai-powered queries',
-					desc: 'describe your data in plain english. groq llama generates sql instantly. ask follow-up questions. it remembers context.',
-				},
-				{
-					emoji: '🃏',
-					title: 'data visualization',
-					desc: 'turn rows into pokemon-style cards. drop live data onto an infinite canvas. sort, filter, and visualize without writing a line of ui code.',
-				},
-			] as feat}
-				<div
-					class="group relative p-8 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-1)] overflow-hidden
-						hover:border-[var(--color-border-active)] hover:-translate-y-0.5
-						hover:shadow-[0_8px_40px_var(--color-electric-glow)]
-						transition-all duration-200 cursor-default"
-				>
-					<div class="flex items-start gap-6">
-						<span class="text-5xl shrink-0 leading-none mt-0.5">{feat.emoji}</span>
-						<div>
-							<h3 class="font-[var(--font-display)] font-semibold text-[var(--color-text)] text-lg mb-1.5">
-								{feat.title}
-							</h3>
-							<p class="font-[var(--font-ui)] text-[var(--color-muted)] text-sm leading-relaxed">
-								{feat.desc}
-							</p>
-						</div>
-					</div>
-					<span
-						class="absolute right-8 top-1/2 -translate-y-1/2 text-[var(--color-electric)] text-lg
-							opacity-0 group-hover:opacity-100 transition-opacity duration-150"
-					>→</span>
+	<!-- feature cards — left-aligned content -->
+	<div class="max-w-[760px] mx-auto px-6 w-full flex flex-col gap-4">
+		{#each [
+			{
+				emoji: '🗂',
+				title: 'visual schema builder',
+				desc: 'drag tables, draw relationships, export sql. no orm config. no migration hell. just a canvas and your ideas.',
+			},
+			{
+				emoji: '✦',
+				title: 'ai-powered queries',
+				desc: 'describe your data in plain english. groq llama generates sql instantly. ask follow-up questions. it remembers context.',
+			},
+			{
+				emoji: '🃏',
+				title: 'data visualization',
+				desc: 'turn rows into pokemon-style cards. drop live data onto an infinite canvas. sort, filter, and visualize without writing a line of ui code.',
+			},
+		] as feat}
+			<div
+				class="group relative flex items-center gap-4 p-6 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-1)] overflow-hidden
+					hover:border-[var(--color-border-active)] hover:-translate-y-0.5
+					hover:shadow-[0_8px_40px_var(--color-electric-glow)]
+					transition-all duration-200 cursor-default"
+			>
+				<span class="text-5xl shrink-0 leading-none">{feat.emoji}</span>
+				<div class="text-left">
+					<h3 class="font-[var(--font-display)] font-semibold text-[var(--color-text)] text-lg mb-1.5">
+						{feat.title}
+					</h3>
+					<p class="font-[var(--font-ui)] text-[var(--color-muted)] text-sm leading-relaxed">
+						{feat.desc}
+					</p>
 				</div>
-			{/each}
-		</div>
+				<span
+					class="absolute right-6 top-1/2 -translate-y-1/2 text-[var(--color-electric)] text-lg
+						opacity-0 group-hover:opacity-100 transition-opacity duration-150"
+				>→</span>
+			</div>
+		{/each}
 	</div>
 </section>
 
 <!-- ── HOW IT WORKS ───────────────────────────────────────────────────────────── -->
 <section class="py-16 sm:py-24 lg:py-32 border-t border-[var(--color-border)]">
-	<div class="max-w-[760px] mx-auto px-6 text-center">
-		<p class="font-[var(--font-body)] text-[10px] text-[var(--color-electric)] tracking-[0.25em] uppercase mb-4 text-center">
+	<!-- section heading — centered -->
+	<div class="max-w-[760px] mx-auto px-6 w-full text-center">
+		<p class="font-[var(--font-body)] text-[10px] text-[var(--color-electric)] tracking-[0.25em] uppercase mb-4">
 			HOW IT WORKS
 		</p>
-		<h2 class="font-[var(--font-display)] font-bold text-[var(--color-text)] mb-3 text-center" style="font-size: clamp(1.4rem, 3.5vw, 2.5rem);">
+		<h2 class="font-[var(--font-display)] font-bold text-[var(--color-text)] mb-3" style="font-size: clamp(1.4rem, 3.5vw, 2.5rem);">
 			from idea to database in 60 seconds
 		</h2>
-		<p class="text-[var(--color-muted)] font-[var(--font-ui)] mb-20 text-[clamp(0.875rem,2vw,1rem)] text-center">
+		<p class="text-[var(--color-muted)] font-[var(--font-ui)] mb-20 text-[clamp(0.875rem,2vw,1rem)]">
 			no yaml. no config files. no reading the docs at 2am.
 		</p>
+	</div>
 
-		<div class="flex flex-col gap-16">
-			{#each [
-				{
-					n: 1,
-					title: 'describe your schema',
-					desc: 'type what your app needs. the ai fills in the details.',
-					checks: ['takes under 60 seconds', 'plain english to sql', 'ai fills in the details'],
-					emoji: '✏️',
-				},
-				{
-					n: 2,
-					title: 'build visually',
-					desc: 'drag tables, draw lines, define every field on a canvas.',
-					checks: ['drag-and-drop table canvas', 'draw relationship lines', 'export or apply directly'],
-					emoji: '🖥',
-				},
-				{
-					n: 3,
-					title: 'explore your data',
-					desc: 'browse results as cards, tables, or on an infinite canvas.',
-					checks: ['pokemon-style data cards', 'live data on infinite canvas', 'sort, filter, visualize'],
-					emoji: '🃏',
-				},
-			] as step, i}
-				<div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center {i % 2 === 1 ? 'md:[direction:rtl]' : ''}">
-					<!-- content -->
-					<div class="{i % 2 === 1 ? 'md:[direction:ltr]' : ''}">
-						<span class="inline-flex items-center px-3 py-1 rounded-full bg-[var(--color-surface-2)] border border-[var(--color-border)] text-[var(--color-electric)] font-[var(--font-body)] text-[10px] mb-4">
-							Step {step.n}
-						</span>
-						<h3 class="font-[var(--font-display)] font-semibold text-[var(--color-text)] text-2xl mb-2">
-							{step.title}
-						</h3>
-						<p class="text-[var(--color-muted)] font-[var(--font-ui)] text-sm mb-5">{step.desc}</p>
-						<ul class="flex flex-col gap-2">
-							{#each step.checks as check}
-								<li class="flex items-center gap-2 text-[var(--color-muted)] font-[var(--font-ui)] text-sm">
-									<span class="text-[var(--color-electric)] font-semibold text-xs shrink-0">✓</span>
-									{check}
-								</li>
-							{/each}
-						</ul>
-					</div>
+	<!-- steps — left-aligned content -->
+	<div class="max-w-[760px] mx-auto px-6 w-full flex flex-col gap-16">
+		{#each [
+			{
+				n: 1,
+				title: 'describe your schema',
+				desc: 'type what your app needs. the ai fills in the details.',
+				checks: ['takes under 60 seconds', 'plain english to sql', 'ai fills in the details'],
+				emoji: '✏️',
+			},
+			{
+				n: 2,
+				title: 'build visually',
+				desc: 'drag tables, draw lines, define every field on a canvas.',
+				checks: ['drag-and-drop table canvas', 'draw relationship lines', 'export or apply directly'],
+				emoji: '🖥',
+			},
+			{
+				n: 3,
+				title: 'explore your data',
+				desc: 'browse results as cards, tables, or on an infinite canvas.',
+				checks: ['pokemon-style data cards', 'live data on infinite canvas', 'sort, filter, visualize'],
+				emoji: '🃏',
+			},
+		] as step, i}
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center {i % 2 === 1 ? 'md:[direction:rtl]' : ''}">
+				<!-- content -->
+				<div class="text-left {i % 2 === 1 ? 'md:[direction:ltr]' : ''}">
+					<span class="inline-flex items-center px-3 py-1 rounded-full bg-[var(--color-surface-2)] border border-[var(--color-border)] text-[var(--color-electric)] font-[var(--font-body)] text-[10px] mb-4">
+						Step {step.n}
+					</span>
+					<h3 class="font-[var(--font-display)] font-semibold text-[var(--color-text)] text-2xl mb-2">
+						{step.title}
+					</h3>
+					<p class="text-[var(--color-muted)] font-[var(--font-ui)] text-sm mb-5">{step.desc}</p>
+					<ul class="flex flex-col gap-2">
+						{#each step.checks as check}
+							<li class="flex items-center gap-2 text-[var(--color-muted)] font-[var(--font-ui)] text-sm">
+								<span class="text-[var(--color-electric)] font-semibold text-xs shrink-0">✓</span>
+								{check}
+							</li>
+						{/each}
+					</ul>
+				</div>
 
-					<!-- illustration card -->
-					<div class="{i % 2 === 1 ? 'md:[direction:ltr]' : ''}">
-						<div class="h-48 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-2)] flex items-center justify-center overflow-hidden">
-							<span class="text-6xl">{step.emoji}</span>
-						</div>
+				<!-- illustration card -->
+				<div class="{i % 2 === 1 ? 'md:[direction:ltr]' : ''}">
+					<div class="h-48 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-2)] flex items-center justify-center overflow-hidden">
+						<span class="text-6xl">{step.emoji}</span>
 					</div>
 				</div>
-			{/each}
-		</div>
+			</div>
+		{/each}
 	</div>
 </section>
 
 <!-- ── STATS ──────────────────────────────────────────────────────────────────── -->
 <section class="py-16 sm:py-24 lg:py-32">
-	<div class="max-w-[760px] mx-auto px-6 text-center">
+	<div class="max-w-[760px] mx-auto px-6 w-full">
 		<div class="rounded-3xl border border-[var(--color-border)] bg-[var(--color-surface-1)] py-16 px-8">
 			<div class="flex flex-col sm:flex-row justify-around gap-8 text-center">
 				{#each [
@@ -229,7 +230,7 @@
 
 <!-- ── CTA ────────────────────────────────────────────────────────────────────── -->
 <section class="py-16 sm:py-24 lg:py-32 pb-0">
-	<div class="max-w-[760px] mx-auto px-6 text-center">
+	<div class="max-w-[760px] mx-auto px-6 w-full">
 		<div class="p-px rounded-3xl bg-gradient-to-b from-[var(--color-electric)]/30 via-[var(--color-electric)]/10 to-transparent">
 			<div class="rounded-3xl bg-[var(--color-surface-1)] py-20 px-8 text-center">
 				<h2 class="font-[var(--font-display)] font-bold text-[var(--color-text)] mb-3" style="font-size: clamp(1.8rem, 5vw, 3rem);">
