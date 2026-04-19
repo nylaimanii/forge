@@ -27,14 +27,14 @@
 	<div style="max-width:720px; margin:0 auto; padding:0 24px; width:100%; display:flex; flex-direction:column; align-items:center; text-align:center; position:relative; z-index:10;">
 
 		<!-- wordmark -->
-		<p class="font-[var(--font-body)] text-[11px] text-[var(--color-muted)] tracking-[0.3em] uppercase mb-12 animate-fade-up animate-fade-up-1">
+		<p class="font-[var(--font-body)] text-[11px] text-[var(--color-muted)] tracking-[0.3em] uppercase animate-fade-up animate-fade-up-1" style="margin-bottom:24px;">
 			FORGE
 		</p>
 
 		<!-- headline -->
 		<h1
-			class="font-[var(--font-display)] font-bold leading-[1.05] tracking-tight mb-8 animate-fade-up animate-fade-up-2"
-			style="font-size:clamp(2.5rem,8vw,5rem); text-align:center;"
+			class="font-[var(--font-display)] font-bold leading-[1.05] tracking-tight animate-fade-up animate-fade-up-2"
+			style="font-size:clamp(2.5rem,8vw,5rem); text-align:center; margin-bottom:32px;"
 		>
 			<span class="text-[var(--color-text)] block">your database,</span>
 			<span class="text-[var(--color-electric)] italic block">beautifully</span>
@@ -44,22 +44,22 @@
 		<!-- subtitle -->
 		<p
 			class="text-[var(--color-muted)] font-[var(--font-ui)] leading-[1.7] mb-10 animate-fade-up animate-fade-up-3"
-			style="font-size:clamp(0.875rem,2vw,1rem); max-width:440px; text-align:center;"
+			style="font-size:clamp(1rem,2vw,1.125rem); max-width:500px; text-align:center;"
 		>
 			forge is the database builder for developers who think visually. schema, sql, ai, cards, and infinite canvas — in one tool.
 		</p>
 
 		<!-- CTAs -->
-		<div class="flex flex-col sm:flex-row items-center gap-4 justify-center mb-10 animate-fade-up animate-fade-up-4 w-full sm:w-auto">
+		<div class="animate-fade-up animate-fade-up-4" style="display:flex; flex-wrap:wrap; align-items:center; gap:16px; justify-content:center; margin-bottom:40px; width:100%;">
 			<a
 				href="/signup"
-				class="inline-flex items-center justify-center w-full sm:w-auto h-12 px-6 rounded-lg bg-[var(--color-accent)] text-[#05050a] font-[var(--font-display)] font-semibold text-sm hover:bg-white hover:shadow-[0_0_32px_rgba(226,232,240,0.25)] transition-all duration-150"
+				style="display:inline-flex; align-items:center; justify-content:center; height:56px; padding:0 36px; border-radius:12px; background:var(--color-accent); color:#05050a; font-family:var(--font-display); font-weight:600; font-size:15px; letter-spacing:0.01em; white-space:nowrap; transition:all 0.15s; text-decoration:none;"
 			>
 				start building →
 			</a>
 			<a
 				href="/demo"
-				class="inline-flex items-center justify-center w-full sm:w-auto h-12 px-6 rounded-lg border border-[var(--color-border-active)] text-[var(--color-text)] font-[var(--font-display)] font-medium text-sm hover:border-[var(--color-electric)]/40 hover:text-[var(--color-electric)] transition-all duration-150"
+				style="display:inline-flex; align-items:center; justify-content:center; height:56px; padding:0 36px; border-radius:12px; border:1px solid rgba(255,255,255,0.18); color:var(--color-text); font-family:var(--font-display); font-weight:500; font-size:15px; letter-spacing:0.01em; white-space:nowrap; transition:all 0.15s; text-decoration:none;"
 			>
 				try a demo →
 			</a>
@@ -90,7 +90,7 @@
 		</p>
 		<h2
 			class="font-[var(--font-display)] font-bold text-[var(--color-text)] mb-3"
-			style="font-size:clamp(1.8rem,5vw,3rem); text-align:center;"
+			style="font-size:clamp(2rem,5vw,3.5rem); text-align:center;"
 		>
 			everything in one workspace
 		</h2>
@@ -122,8 +122,8 @@
 			},
 		] as feat}
 			<div
-				class="group relative rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-1)] overflow-hidden hover:border-[var(--color-border-active)] hover:-translate-y-0.5 hover:shadow-[0_8px_40px_var(--color-electric-glow)] transition-all duration-200 cursor-default"
-				style="display:flex; flex-direction:row; align-items:center; gap:16px; padding:24px;"
+				class="group relative hover:border-[var(--color-border-active)] hover:-translate-y-0.5 hover:shadow-[0_8px_40px_var(--color-electric-glow)] cursor-default"
+				style="padding:28px; border-radius:20px; border:1px solid rgba(255,255,255,0.06); background:var(--color-surface-1); transition:all 0.2s; display:flex; align-items:center; gap:20px; overflow:hidden;"
 			>
 				<span style="font-size:3rem; flex-shrink:0; line-height:1;">{feat.emoji}</span>
 				<div style="text-align:left; flex:1;">
@@ -152,7 +152,7 @@
 		</p>
 		<h2
 			class="font-[var(--font-display)] font-bold text-[var(--color-text)] mb-3"
-			style="font-size:clamp(1.4rem,3.5vw,2.5rem); text-align:center;"
+			style="font-size:clamp(1.6rem,3.5vw,2.8rem); text-align:center;"
 		>
 			from idea to database in 60 seconds
 		</h2>
@@ -165,7 +165,7 @@
 	</div>
 
 	<!-- steps -->
-	<div style="max-width:720px; margin:0 auto; padding:0 24px; width:100%; display:flex; flex-direction:column; gap:64px;">
+	<div style="max-width:720px; margin:0 auto; padding:0 24px; width:100%; display:flex; flex-direction:column; gap:96px;">
 		{#each [
 			{
 				n: 1,
@@ -199,7 +199,7 @@
 					>
 						Step {step.n}
 					</span>
-					<h3 class="font-[var(--font-display)] font-semibold text-[var(--color-text)] text-2xl mb-2">
+					<h3 class="font-[var(--font-display)] font-semibold text-[var(--color-text)] mb-2" style="font-size:clamp(1.4rem,3vw,1.8rem);">
 						{step.title}
 					</h3>
 					<p class="text-[var(--color-muted)] font-[var(--font-ui)] text-sm mb-5">{step.desc}</p>
@@ -244,7 +244,7 @@
 					<div>
 						<div
 							class="font-[var(--font-display)] font-bold text-[var(--color-electric)] leading-none mb-2"
-							style="font-size:72px;"
+							style="font-size:88px;"
 						>
 							{stat.value}
 						</div>
