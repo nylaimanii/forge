@@ -9,6 +9,8 @@
 	<meta name="description" content="forge is the database builder for developers who think visually. schema, sql, ai, cards, and infinite canvas — in one tool." />
 </svelte:head>
 
+<div class="w-full overflow-x-hidden">
+
 <!-- ── HERO ──────────────────────────────────────────────────────────────────── -->
 <section class="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-[var(--color-bg)]">
 	<!-- electric blue ambient glow -->
@@ -20,7 +22,7 @@
 	></div>
 
 	<!-- content -->
-	<div class="relative z-10 flex flex-col items-center text-center px-6 max-w-3xl mx-auto">
+	<div class="relative z-10 flex flex-col items-center text-center px-6 max-w-[760px] mx-auto w-full">
 
 		<!-- wordmark -->
 		<p class="font-[var(--font-body)] text-[11px] text-[var(--color-muted)] tracking-[0.3em] uppercase mb-12 animate-fade-up animate-fade-up-1">
@@ -29,8 +31,8 @@
 
 		<!-- headline -->
 		<h1
-			class="font-[var(--font-display)] font-bold leading-[1.05] tracking-tight mb-8 animate-fade-up animate-fade-up-2"
-			style="font-size: clamp(3.25rem, 8vw, 5rem);"
+			class="font-[var(--font-display)] font-bold leading-[1.05] tracking-tight mb-8 animate-fade-up animate-fade-up-2 text-center"
+			style="font-size: clamp(2.5rem, 8vw, 5rem);"
 		>
 			<span class="text-[var(--color-text)] block">your database,</span>
 			<span class="text-[var(--color-electric)] italic block">beautifully</span>
@@ -39,23 +41,22 @@
 
 		<!-- subtitle -->
 		<p
-			class="text-[var(--color-muted)] font-[var(--font-ui)] leading-[1.7] mb-10 animate-fade-up animate-fade-up-3"
-			style="max-width: 440px; font-size: 16px;"
+			class="text-[var(--color-muted)] font-[var(--font-ui)] leading-[1.7] mb-10 animate-fade-up animate-fade-up-3 text-[clamp(0.875rem,2vw,1rem)] max-w-[440px] text-center"
 		>
 			forge is the database builder for developers who think visually. schema, sql, ai, cards, and infinite canvas — in one tool.
 		</p>
 
 		<!-- CTAs -->
-		<div class="flex items-center gap-4 flex-wrap justify-center mb-10 animate-fade-up animate-fade-up-4">
+		<div class="flex flex-col sm:flex-row items-center gap-4 justify-center mb-10 animate-fade-up animate-fade-up-4 w-full sm:w-auto">
 			<a
 				href="/signup"
-				class="inline-flex items-center h-12 px-6 rounded-lg bg-[var(--color-accent)] text-[#05050a] font-[var(--font-display)] font-semibold text-sm hover:bg-white hover:shadow-[0_0_32px_rgba(226,232,240,0.25)] transition-all duration-150"
+				class="inline-flex items-center justify-center w-full sm:w-auto h-12 px-6 rounded-lg bg-[var(--color-accent)] text-[#05050a] font-[var(--font-display)] font-semibold text-sm hover:bg-white hover:shadow-[0_0_32px_rgba(226,232,240,0.25)] transition-all duration-150"
 			>
 				start building →
 			</a>
 			<a
 				href="/login"
-				class="inline-flex items-center h-12 px-6 rounded-lg border border-[var(--color-border-active)] text-[var(--color-text)] font-[var(--font-display)] font-medium text-sm hover:border-[var(--color-electric)]/40 hover:text-[var(--color-electric)] transition-all duration-150"
+				class="inline-flex items-center justify-center w-full sm:w-auto h-12 px-6 rounded-lg border border-[var(--color-border-active)] text-[var(--color-text)] font-[var(--font-display)] font-medium text-sm hover:border-[var(--color-electric)]/40 hover:text-[var(--color-electric)] transition-all duration-150"
 			>
 				try a demo →
 			</a>
@@ -77,16 +78,16 @@
 </section>
 
 <!-- ── FEATURES ───────────────────────────────────────────────────────────────── -->
-<section class="py-32 px-6">
-	<div class="max-w-3xl mx-auto">
+<section class="py-16 sm:py-24 lg:py-32">
+	<div class="max-w-[760px] mx-auto px-6">
 		<!-- label -->
-		<p class="font-[var(--font-body)] text-[10px] text-[var(--color-electric)] tracking-[0.25em] uppercase mb-4">
+		<p class="font-[var(--font-body)] text-[10px] text-[var(--color-electric)] tracking-[0.25em] uppercase mb-4 text-center">
 			CAPABILITIES
 		</p>
-		<h2 class="font-[var(--font-display)] font-bold text-[var(--color-text)] mb-3" style="font-size: clamp(2rem, 5vw, 3rem);">
+		<h2 class="font-[var(--font-display)] font-bold text-[var(--color-text)] mb-3 text-center" style="font-size: clamp(1.8rem, 5vw, 3rem);">
 			everything in one workspace
 		</h2>
-		<p class="text-[var(--color-muted)] font-[var(--font-ui)] mb-16 text-sm">
+		<p class="text-[var(--color-muted)] font-[var(--font-ui)] mb-16 text-[clamp(0.875rem,2vw,1rem)] text-center">
 			designed for developers who want to move fast and look good doing it.
 		</p>
 
@@ -109,7 +110,7 @@
 				},
 			] as feat}
 				<div
-					class="group relative p-8 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-1)]
+					class="group relative p-8 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-1)] overflow-hidden
 						hover:border-[var(--color-border-active)] hover:-translate-y-0.5
 						hover:shadow-[0_8px_40px_var(--color-electric-glow)]
 						transition-all duration-200 cursor-default"
@@ -136,15 +137,15 @@
 </section>
 
 <!-- ── HOW IT WORKS ───────────────────────────────────────────────────────────── -->
-<section class="py-32 px-6 border-t border-[var(--color-border)]">
-	<div class="max-w-3xl mx-auto">
-		<p class="font-[var(--font-body)] text-[10px] text-[var(--color-electric)] tracking-[0.25em] uppercase mb-4">
+<section class="py-16 sm:py-24 lg:py-32 border-t border-[var(--color-border)]">
+	<div class="max-w-[760px] mx-auto px-6">
+		<p class="font-[var(--font-body)] text-[10px] text-[var(--color-electric)] tracking-[0.25em] uppercase mb-4 text-center">
 			HOW IT WORKS
 		</p>
-		<h2 class="font-[var(--font-display)] font-bold text-[var(--color-text)] mb-3" style="font-size: clamp(2rem, 5vw, 3rem);">
+		<h2 class="font-[var(--font-display)] font-bold text-[var(--color-text)] mb-3 text-center" style="font-size: clamp(1.8rem, 5vw, 3rem);">
 			from idea to database in 60 seconds
 		</h2>
-		<p class="text-[var(--color-muted)] font-[var(--font-ui)] mb-20 text-sm">
+		<p class="text-[var(--color-muted)] font-[var(--font-ui)] mb-20 text-[clamp(0.875rem,2vw,1rem)] text-center">
 			no yaml. no config files. no reading the docs at 2am.
 		</p>
 
@@ -194,7 +195,7 @@
 
 					<!-- illustration card -->
 					<div class="{i % 2 === 1 ? 'md:[direction:ltr]' : ''}">
-						<div class="h-48 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-2)] flex items-center justify-center">
+						<div class="h-48 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-2)] flex items-center justify-center overflow-hidden">
 							<span class="text-6xl">{step.emoji}</span>
 						</div>
 					</div>
@@ -205,10 +206,10 @@
 </section>
 
 <!-- ── STATS ──────────────────────────────────────────────────────────────────── -->
-<section class="py-16 px-6">
-	<div class="max-w-3xl mx-auto">
+<section class="py-16 sm:py-24 lg:py-32">
+	<div class="max-w-[760px] mx-auto px-6">
 		<div class="rounded-3xl border border-[var(--color-border)] bg-[var(--color-surface-1)] py-16 px-8">
-			<div class="flex flex-col sm:flex-row justify-around gap-10 text-center">
+			<div class="flex flex-col sm:flex-row justify-around gap-8 text-center">
 				{#each [
 					{ value: '5', label: 'core views' },
 					{ value: '∞', label: 'rows you can visualize' },
@@ -227,26 +228,26 @@
 </section>
 
 <!-- ── CTA ────────────────────────────────────────────────────────────────────── -->
-<section class="py-16 px-6 pb-0">
-	<div class="max-w-3xl mx-auto">
+<section class="py-16 sm:py-24 lg:py-32 pb-0">
+	<div class="max-w-[760px] mx-auto px-6">
 		<div class="p-px rounded-3xl bg-gradient-to-b from-[var(--color-electric)]/30 via-[var(--color-electric)]/10 to-transparent">
 			<div class="rounded-3xl bg-[var(--color-surface-1)] py-20 px-8 text-center">
-				<h2 class="font-[var(--font-display)] font-bold text-[var(--color-text)] mb-3" style="font-size: clamp(2rem, 5vw, 3rem);">
+				<h2 class="font-[var(--font-display)] font-bold text-[var(--color-text)] mb-3" style="font-size: clamp(1.8rem, 5vw, 3rem);">
 					ready to build?
 				</h2>
 				<p class="text-[var(--color-muted)] font-[var(--font-ui)] text-sm mb-10">
 					no credit card. no setup. just forge.
 				</p>
-				<div class="flex items-center gap-4 flex-wrap justify-center">
+				<div class="flex flex-col sm:flex-row items-center gap-4 justify-center">
 					<a
 						href="/signup"
-						class="inline-flex items-center h-12 px-6 rounded-lg bg-[var(--color-accent)] text-[#05050a] font-[var(--font-display)] font-semibold text-sm hover:bg-white hover:shadow-[0_0_32px_rgba(226,232,240,0.25)] transition-all duration-150"
+						class="inline-flex items-center justify-center w-full sm:w-auto h-12 px-6 rounded-lg bg-[var(--color-accent)] text-[#05050a] font-[var(--font-display)] font-semibold text-sm hover:bg-white hover:shadow-[0_0_32px_rgba(226,232,240,0.25)] transition-all duration-150"
 					>
 						start building →
 					</a>
 					<a
 						href="/login"
-						class="inline-flex items-center h-12 px-6 rounded-lg border border-[var(--color-border-active)] text-[var(--color-text)] font-[var(--font-display)] font-medium text-sm hover:border-[var(--color-electric)]/40 hover:text-[var(--color-electric)] transition-all duration-150"
+						class="inline-flex items-center justify-center w-full sm:w-auto h-12 px-6 rounded-lg border border-[var(--color-border-active)] text-[var(--color-text)] font-[var(--font-display)] font-medium text-sm hover:border-[var(--color-electric)]/40 hover:text-[var(--color-electric)] transition-all duration-150"
 					>
 						try a demo →
 					</a>
@@ -263,3 +264,5 @@
 <footer class="py-12 text-center">
 	<p class="font-[var(--font-body)] text-xs text-[var(--color-muted)]">forge © 2025</p>
 </footer>
+
+</div>
