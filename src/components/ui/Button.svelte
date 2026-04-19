@@ -35,13 +35,13 @@
 
 	// variant → visual style map
 	const variantMap: Record<Variant, string> = {
-		primary:   'bg-[var(--color-accent)] text-white font-medium hover:brightness-110 hover:shadow-[0_0_24px_var(--color-accent-glow)] active:scale-[0.97]',
-		secondary: 'glass text-[var(--color-text)] hover:border-[var(--color-accent)] hover:shadow-[0_0_16px_var(--color-accent-glow)] active:scale-[0.97]',
+		primary:   'bg-[var(--color-accent)] text-[#05050a] font-semibold hover:bg-white hover:shadow-lg active:scale-[0.97]',
+		secondary: 'glass text-[var(--color-text)] hover:border-[var(--color-electric)]/40 hover:shadow-[0_0_16px_var(--color-electric-glow)] active:scale-[0.97]',
 		ghost:     'bg-transparent text-[var(--color-muted)] hover:text-[var(--color-text)] hover:bg-white/5 active:scale-[0.97]',
 		danger:    'bg-[var(--color-danger)] text-white font-medium hover:brightness-110 hover:shadow-[0_0_24px_var(--color-danger-glow)] active:scale-[0.97]',
 	};
 
-	const base = 'inline-flex items-center gap-2 rounded-lg border border-[var(--color-border)] transition-all duration-150 cursor-pointer select-none disabled:opacity-40 disabled:pointer-events-none font-[var(--font-ui)]';
+	const base = 'inline-flex items-center gap-2 rounded-lg border border-[var(--color-border)] transition-all duration-150 cursor-pointer select-none disabled:opacity-40 disabled:pointer-events-none font-[var(--font-display)]';
 </script>
 
 <button

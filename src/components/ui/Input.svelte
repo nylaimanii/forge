@@ -45,15 +45,15 @@
 		onchange={onchange}
 		oninput={oninput}
 		class="
-			w-full rounded-lg px-3 py-2 text-sm
-			bg-[var(--color-surface-2)] text-[var(--color-text)]
+			w-full h-11 rounded-lg px-3 text-sm
+			bg-[var(--color-surface-3)] text-[var(--color-text)]
 			border border-[var(--color-border)]
 			placeholder:text-[var(--color-muted)]
-			font-[var(--font-ui)]
+			font-[var(--font-body)]
 			transition-all duration-150
-			focus:outline-none focus:border-[var(--color-accent)] focus:shadow-[0_0_0_3px_var(--color-accent-glow)]
+			focus:outline-none focus:border-[var(--color-electric)] focus:shadow-[0_0_0_3px_var(--color-electric-glow)]
 			disabled:opacity-40 disabled:cursor-not-allowed
-			{error ? 'border-[var(--color-danger)] focus:shadow-[0_0_0_3px_var(--color-danger-glow)]' : ''}
+			{error ? 'border-[var(--color-danger)] focus:shadow-[0_0_0_3px_var(--color-danger-dim)]' : ''}
 		"
 	/>
 

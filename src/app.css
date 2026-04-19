@@ -1,40 +1,45 @@
-/* ─── fonts ──────────────────────────────────────────────────────────────────── */
-@import url('https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@400,500,600,700,800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap');
+/* ─── google fonts ──────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap');
 
 /* ─── tailwind v4 ───────────────────────────────────────────────────────────── */
 @import "tailwindcss";
 
 /* ─── forge design tokens ───────────────────────────────────────────────────── */
 @theme {
-  /* backgrounds — deep obsidian */
-  --color-bg:        #09090b;
-  --color-surface-1: #111114;
-  --color-surface-2: #1a1a1d;
+  /* backgrounds — deep black-navy */
+  --color-bg:        #05050a;
+  --color-surface-1: #0d0d14;
+  --color-surface-2: #13131d;
+  --color-surface-3: #1a1a27;
 
   /* borders */
-  --color-border:        #ffffff0e;
-  --color-border-subtle: #ffffff07;
+  --color-border:        rgba(255,255,255,0.06);
+  --color-border-active: rgba(255,255,255,0.18);
+
+  /* near-white accent — primary CTA color */
+  --color-accent:      #e2e8f0;
+  --color-accent-dim:  rgba(226,232,240,0.08);
+  --color-accent-glow: rgba(226,232,240,0.15);
+
+  /* electric blue — highlights, active states, focus */
+  --color-electric:      #4f8ef7;
+  --color-electric-dim:  rgba(79,142,247,0.12);
+  --color-electric-glow: rgba(79,142,247,0.25);
+
+  /* semantic */
+  --color-success:     #22d3a5;
+  --color-danger:      #f87171;
+  --color-danger-dim:  rgba(248,113,113,0.12);
+  --color-danger-glow: rgba(248,113,113,0.20);
 
   /* text */
-  --color-text:  #fafaf9;
-  --color-muted: #71717a;
-
-  /* electric amber accent */
-  --color-accent:      #f59e0b;
-  --color-accent-glow: #f59e0b35;
-
-  /* secondary warm amber */
-  --color-secondary:      #fde68a;
-  --color-secondary-glow: #fde68a20;
-
-  /* danger */
-  --color-danger:      #ef4444;
-  --color-danger-glow: #ef444430;
+  --color-text:   #f1f5f9;
+  --color-muted:  #64748b;
+  --color-subtle: #1e293b;
 
   /* typography */
-  --font-display: 'Cabinet Grotesk', system-ui, sans-serif;
-  --font-body:    'JetBrains Mono', 'Courier New', monospace;
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-body:    'Space Mono', 'Courier New', monospace;
   --font-ui:      'Inter', system-ui, sans-serif;
 
   /* radii */
@@ -80,13 +85,12 @@ body::before {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.03;
+  opacity: 0.025;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
   background-repeat: repeat;
   background-size: 200px 200px;
 }
 
-/* all content sits above the noise overlay */
 body > * {
   position: relative;
   z-index: 1;
@@ -101,23 +105,23 @@ body > * {
   background: var(--color-surface-1);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-accent);
+  background: var(--color-electric);
   border-radius: 3px;
-  opacity: 0.6;
+  opacity: 0.5;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: color-mix(in srgb, var(--color-accent) 80%, white);
+  background: color-mix(in srgb, var(--color-electric) 80%, white);
 }
 
-/* ─── focus ring ────────────────────────────────────────────────────────────── */
+/* ─── focus ring ─────────────────────────────────────────────────────────────── */
 :focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--color-electric);
   outline-offset: 2px;
 }
 
 /* ─── selection ─────────────────────────────────────────────────────────────── */
 ::selection {
-  background: var(--color-accent-glow);
+  background: var(--color-electric-dim);
   color: var(--color-text);
 }
 
@@ -134,6 +138,9 @@ body > * {
 /* glow effects */
 .glow-accent {
   box-shadow: 0 0 20px var(--color-accent-glow);
+}
+.glow-electric {
+  box-shadow: 0 0 24px var(--color-electric-glow);
 }
 .glow-danger {
   box-shadow: 0 0 20px var(--color-danger-glow);
@@ -161,7 +168,16 @@ body > * {
 .animate-fade-up-4 { animation-delay: 180ms; }
 .animate-fade-up-5 { animation-delay: 240ms; }
 
-/* gradient mesh animation (used on dashboard + homepage) */
+/* gentle bounce (homepage arrow) */
+@keyframes bounce-gentle {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(8px); }
+}
+.animate-bounce-gentle {
+  animation: bounce-gentle 2.4s ease-in-out infinite;
+}
+
+/* gradient mesh animation */
 @keyframes mesh-shift {
   0%   { background-position: 0% 50%; }
   50%  { background-position: 100% 50%; }
@@ -169,9 +185,9 @@ body > * {
 }
 
 .gradient-mesh {
-  background: radial-gradient(ellipse at 20% 20%, #f59e0b12 0%, transparent 50%),
-              radial-gradient(ellipse at 80% 80%, #fde68a08 0%, transparent 50%),
-              radial-gradient(ellipse at 50% 50%, #ef444408 0%, transparent 60%);
+  background: radial-gradient(ellipse at 20% 20%, rgba(79,142,247,0.10) 0%, transparent 50%),
+              radial-gradient(ellipse at 80% 80%, rgba(124,58,237,0.06) 0%, transparent 50%),
+              radial-gradient(ellipse at 50% 50%, rgba(248,113,113,0.04) 0%, transparent 60%);
   background-size: 200% 200%;
   animation: mesh-shift 12s ease infinite;
 }

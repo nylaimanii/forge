@@ -14,7 +14,6 @@
 
 	let dropdownOpen = $state(false);
 
-	// derive initials from user email for the avatar
 	let initials = $derived(
 		$user?.email ? $user.email.slice(0, 2).toUpperCase() : '??'
 	);
@@ -29,7 +28,6 @@
 		}
 	}
 
-	// close dropdown when clicking outside
 	function handleOutsideClick(e: MouseEvent) {
 		const target = e.target as HTMLElement;
 		if (!target.closest('[data-dropdown]')) {
@@ -40,7 +38,7 @@
 
 <svelte:window onclick={handleOutsideClick} />
 
-<header class="fixed top-0 left-16 right-0 h-14 z-30 flex items-center px-4 gap-4 bg-[color-mix(in_srgb,var(--color-surface-1)_80%,transparent)] backdrop-blur-xl border-b border-[var(--color-border)]">
+<header class="fixed top-0 left-16 right-0 h-14 z-30 flex items-center px-4 gap-4 bg-[color-mix(in_srgb,var(--color-surface-1)_85%,transparent)] backdrop-blur-xl border-b border-[var(--color-border)]">
 
 	<!-- breadcrumb -->
 	<nav class="flex items-center gap-1.5 text-sm flex-1">
@@ -48,7 +46,7 @@
 		{#each breadcrumbs as crumb}
 			<ChevronRight size={12} class="text-[var(--color-muted)]" />
 			{#if crumb.href}
-				<a href={crumb.href} class="text-[var(--color-text)] hover:text-[var(--color-accent)] transition-colors font-[var(--font-ui)]">
+				<a href={crumb.href} class="text-[var(--color-text)] hover:text-[var(--color-electric)] transition-colors font-[var(--font-ui)]">
 					{crumb.label}
 				</a>
 			{:else}
@@ -57,13 +55,14 @@
 		{/each}
 	</nav>
 
-	<!-- command palette trigger (center) -->
+	<!-- command palette trigger -->
 	<button
 		onclick={onCommandPalette}
 		class="
 			flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs text-[var(--color-muted)]
-			glass border border-[var(--color-border)] hover:border-[var(--color-accent)]/30
-			hover:text-[var(--color-text)] transition-all duration-150 min-w-[160px]
+			glass border border-[var(--color-border)]
+			hover:border-[var(--color-electric)]/30 hover:text-[var(--color-electric)]
+			transition-all duration-150 min-w-[160px]
 		"
 	>
 		<Search size={12} />
@@ -75,9 +74,9 @@
 		<button
 			onclick={() => (dropdownOpen = !dropdownOpen)}
 			class="
-				w-8 h-8 rounded-full bg-[var(--color-accent)] text-white text-xs font-semibold
+				w-8 h-8 rounded-full bg-[var(--color-electric)] text-white text-xs font-semibold
 				flex items-center justify-center font-[var(--font-ui)]
-				hover:shadow-[0_0_12px_var(--color-accent-glow)] transition-all duration-150
+				hover:shadow-[0_0_12px_var(--color-electric-glow)] transition-all duration-150
 			"
 			aria-label="Account menu"
 		>
@@ -98,7 +97,7 @@
 				</a>
 				<button
 					onclick={handleLogout}
-					class="w-full text-left px-3 py-2 text-sm text-[var(--color-danger)] hover:bg-[var(--color-danger-glow)] transition-colors font-[var(--font-ui)]"
+					class="w-full text-left px-3 py-2 text-sm text-[var(--color-danger)] hover:bg-[var(--color-danger-dim)] transition-colors font-[var(--font-ui)]"
 				>
 					Log out
 				</button>

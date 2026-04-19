@@ -7,6 +7,10 @@ export const load: PageServerLoad = async ({ locals }) => {
 		throw redirect(303, '/dashboard');
 	}
 
-	// unauthenticated users see the public homepage
-	return {};
+	// get a public project count (anon key; RLS filters to visible rows — will be 0 until a public policy is added)
+	const { count } = await locals.supabase
+		.from('projects')
+		.select('*', { count: 'exact', head: true });
+
+	return { projectCount: count ?? 0 };
 };

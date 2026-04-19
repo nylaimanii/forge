@@ -21,7 +21,6 @@
 		{ icon: PenLine,         label: 'Whiteboard',   href: '/whiteboard' },
 	];
 
-	// active route detection
 	let currentPath = $derived(page.url.pathname);
 
 	function isActive(href: string) {
@@ -31,10 +30,10 @@
 
 <aside class="fixed left-0 top-0 h-screen w-16 z-40 flex flex-col items-center py-4 border-r border-[var(--color-border)] bg-[var(--color-surface-1)]">
 
-	<!-- forge logo mark -->
+	<!-- forge logo mark — electric blue -->
 	<a
 		href="/dashboard"
-		class="w-9 h-9 mb-6 flex items-center justify-center rounded-xl bg-[var(--color-accent)] text-[#09090b] font-[var(--font-display)] font-bold text-lg hover:shadow-[0_0_24px_var(--color-accent-glow)] transition-all duration-200"
+		class="w-9 h-9 mb-6 flex items-center justify-center rounded-xl bg-[var(--color-electric)] text-white font-[var(--font-display)] font-bold text-lg hover:shadow-[0_0_24px_var(--color-electric-glow)] transition-all duration-200"
 		aria-label="Forge dashboard"
 	>
 		f
@@ -50,17 +49,16 @@
 						href={item.href}
 						class="
 							relative w-10 h-10 flex items-center justify-center rounded-xl
-							transition-all duration-150 group
+							transition-all duration-150
 							{active
-								? 'text-[var(--color-accent)] bg-[var(--color-accent-glow)]'
+								? 'text-[var(--color-electric)] bg-[var(--color-electric-dim)]'
 								: 'text-[var(--color-muted)] hover:text-[var(--color-text)] hover:bg-white/5'
 							}
 						"
 						aria-label={item.label}
 					>
-						<!-- active left-border indicator -->
 						{#if active}
-							<span class="absolute left-0 top-2 bottom-2 w-0.5 rounded-r-full bg-[var(--color-accent)] shadow-[0_0_8px_var(--color-accent)]"></span>
+							<span class="absolute left-0 top-2 bottom-2 w-0.5 rounded-r-full bg-[var(--color-electric)] shadow-[0_0_8px_var(--color-electric)]"></span>
 						{/if}
 						<item.icon size={18} strokeWidth={active ? 2 : 1.75} />
 					</a>

@@ -2,8 +2,6 @@
 	import { goto } from '$app/navigation';
 	import { createBrowserSupabase } from '$lib/supabase';
 	import { showToast } from '$lib/stores/toasts';
-	import Button from '$components/ui/Button.svelte';
-	import Input from '$components/ui/Input.svelte';
 	import Toast from '$components/ui/Toast.svelte';
 
 	let email    = $state('');
@@ -33,93 +31,107 @@
 
 <div class="min-h-screen flex bg-[var(--color-bg)]">
 
-	<!-- ── LEFT: brand showcase panel ───────────────────────────────────────── -->
-	<div class="hidden lg:flex w-[55%] relative flex-col justify-between p-12 overflow-hidden border-r border-[var(--color-border)]">
-		<!-- amber glow -->
-		<div class="absolute inset-0 bg-gradient-to-br from-[#f59e0b08] via-transparent to-[#f59e0b04] pointer-events-none"></div>
+	<!-- ── LEFT: brand panel ─────────────────────────────────────────────────── -->
+	<div class="hidden lg:flex w-[55%] relative flex-col justify-between p-14 bg-[var(--color-surface-1)] border-r border-[var(--color-border)] overflow-hidden">
 		<!-- dot grid -->
 		<div
-			class="absolute inset-0 opacity-[0.03] pointer-events-none"
-			style="background-image: radial-gradient(circle, #fafaf9 1px, transparent 1px); background-size: 24px 24px;"
+			class="absolute inset-0 pointer-events-none"
+			style="background-image: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 22px 22px;"
 		></div>
+		<!-- electric glow -->
+		<div class="absolute bottom-0 left-0 w-96 h-96 bg-[var(--color-electric)] opacity-[0.04] blur-[100px] pointer-events-none"></div>
 
 		<!-- logo -->
 		<div class="relative z-10 flex items-center gap-3">
-			<div class="w-9 h-9 rounded-xl bg-[var(--color-accent)] flex items-center justify-center text-[#09090b] font-[var(--font-display)] font-bold text-lg">
+			<div class="w-[18px] h-[18px] rounded bg-[var(--color-electric)] flex items-center justify-center text-white font-[var(--font-display)] font-bold text-[10px]">
 				f
 			</div>
-			<span class="text-lg font-bold text-[var(--color-text)] font-[var(--font-display)] tracking-tight">forge</span>
+			<span class="font-[var(--font-display)] font-semibold text-[var(--color-text)] text-sm tracking-tight">forge</span>
 		</div>
 
-		<!-- headline + feature list -->
-		<div class="relative z-10 space-y-10">
-			<div class="space-y-4">
-				<h2 class="text-4xl font-bold text-[var(--color-text)] font-[var(--font-display)] leading-tight tracking-tight">
-					Build databases<br>like a designer.
-				</h2>
-				<p class="text-[var(--color-muted)] text-sm leading-relaxed max-w-sm font-[var(--font-ui)]">
-					Visual schema design, AI-powered SQL, and real-time visualization — all in one workspace.
-				</p>
-			</div>
-
-			<ul class="space-y-5">
-				{#each [
-					{ label: 'Canvas schema builder', desc: 'Drag tables, draw relationships, export SQL' },
-					{ label: 'AI query assistant', desc: 'Ask in English, get precise SQL back instantly' },
-					{ label: 'Real-time visualization', desc: 'Table + card views with custom layouts' },
-				] as feat}
-					<li class="flex items-start gap-3">
-						<div class="mt-0.5 w-5 h-5 rounded-md bg-[var(--color-accent-glow)] border border-[var(--color-accent)]/30 flex items-center justify-center shrink-0">
-							<span class="text-[var(--color-accent)] text-[10px] font-bold">✓</span>
-						</div>
-						<div>
-							<p class="text-sm font-semibold text-[var(--color-text)] font-[var(--font-ui)]">{feat.label}</p>
-							<p class="text-xs text-[var(--color-muted)] font-[var(--font-ui)]">{feat.desc}</p>
-						</div>
-					</li>
-				{/each}
-			</ul>
+		<!-- center quote -->
+		<div class="relative z-10 max-w-sm">
+			<blockquote class="font-[var(--font-display)] font-bold text-[var(--color-text)] leading-tight tracking-tight" style="font-size: 36px;">
+				"the database builder for developers who care about
+				<em class="text-[var(--color-electric)] not-italic">design.</em>"
+			</blockquote>
 		</div>
 
-		<!-- footer note -->
-		<p class="relative z-10 text-xs text-[var(--color-muted)] font-[var(--font-ui)]">
-			Free, open source, powered by Supabase.
-		</p>
+		<!-- pills -->
+		<div class="relative z-10 flex items-center gap-3 flex-wrap">
+			{#each ['visual schema', 'ai queries', 'data cards'] as pill}
+				<span class="inline-flex items-center px-3 py-1 rounded-full bg-[var(--color-surface-2)] border border-[var(--color-border)] font-[var(--font-body)] text-[10px] text-[var(--color-muted)]">
+					{pill}
+				</span>
+			{/each}
+		</div>
 	</div>
 
 	<!-- ── RIGHT: form panel ─────────────────────────────────────────────────── -->
-	<div class="flex-1 flex items-center justify-center px-8 py-12">
+	<div class="flex-1 flex items-center justify-center px-8 py-12 bg-[var(--color-bg)]">
 		<div class="w-full max-w-sm animate-fade-up">
 
 			<!-- mobile logo -->
-			<div class="flex items-center gap-2 mb-8 lg:hidden">
-				<div class="w-8 h-8 rounded-xl bg-[var(--color-accent)] flex items-center justify-center text-[#09090b] font-[var(--font-display)] font-bold text-base">
-					f
-				</div>
-				<span class="text-base font-bold text-[var(--color-text)] font-[var(--font-display)]">forge</span>
+			<div class="flex items-center gap-2 mb-10 lg:hidden">
+				<div class="w-[18px] h-[18px] rounded bg-[var(--color-electric)] flex items-center justify-center text-white font-[var(--font-display)] font-bold text-[10px]">f</div>
+				<span class="font-[var(--font-display)] font-semibold text-[var(--color-text)] text-sm">forge</span>
 			</div>
 
-			<div class="mb-8">
-				<h1 class="text-2xl font-bold text-[var(--color-text)] font-[var(--font-display)] tracking-tight">Welcome back</h1>
-				<p class="text-sm text-[var(--color-muted)] mt-1 font-[var(--font-ui)]">Log in to your forge workspace</p>
-			</div>
+			<h1 class="font-[var(--font-display)] font-bold text-[var(--color-text)] mb-1" style="font-size: 28px;">welcome back</h1>
+			<p class="font-[var(--font-ui)] text-[var(--color-muted)] text-sm mb-8">log in to your workspace</p>
 
 			<form onsubmit={handleLogin} class="flex flex-col gap-4">
-				<Input label="Email" type="email" placeholder="you@example.com" bind:value={email} />
-				<Input label="Password" type="password" placeholder="••••••••" bind:value={password} />
+				<!-- email -->
+				<div class="flex flex-col gap-1.5">
+					<label class="font-[var(--font-ui)] text-xs font-medium text-[var(--color-muted)] uppercase tracking-wider">Email</label>
+					<input
+						type="email"
+						placeholder="you@example.com"
+						bind:value={email}
+						class="w-full h-11 rounded-lg px-3 text-sm
+							bg-[var(--color-surface-3)] text-[var(--color-text)]
+							border border-[var(--color-border)]
+							font-[var(--font-body)]
+							placeholder:text-[var(--color-muted)]
+							focus:outline-none focus:border-[var(--color-electric)] focus:shadow-[0_0_0_3px_var(--color-electric-glow)]
+							transition-all duration-150"
+					/>
+				</div>
 
-				<Button type="submit" variant="primary" size="lg" disabled={loading} class="w-full mt-2 justify-center">
-					{#snippet children()}{loading ? 'Logging in...' : 'Log in'}{/snippet}
-				</Button>
+				<!-- password -->
+				<div class="flex flex-col gap-1.5">
+					<label class="font-[var(--font-ui)] text-xs font-medium text-[var(--color-muted)] uppercase tracking-wider">Password</label>
+					<input
+						type="password"
+						placeholder="••••••••"
+						bind:value={password}
+						class="w-full h-11 rounded-lg px-3 text-sm
+							bg-[var(--color-surface-3)] text-[var(--color-text)]
+							border border-[var(--color-border)]
+							font-[var(--font-body)]
+							placeholder:text-[var(--color-muted)]
+							focus:outline-none focus:border-[var(--color-electric)] focus:shadow-[0_0_0_3px_var(--color-electric-glow)]
+							transition-all duration-150"
+					/>
+				</div>
+
+				<button
+					type="submit"
+					disabled={loading}
+					class="w-full h-12 rounded-lg bg-[var(--color-accent)] text-[#05050a] font-[var(--font-display)] font-semibold text-sm
+						hover:bg-white hover:shadow-lg transition-all duration-150
+						disabled:opacity-40 disabled:pointer-events-none mt-2"
+				>
+					{loading ? 'logging in...' : 'log in'}
+				</button>
 			</form>
 
 			<p class="mt-6 text-center text-sm text-[var(--color-muted)] font-[var(--font-ui)]">
-				Don't have an account?
-				<a href="/signup" class="text-[var(--color-accent)] hover:underline ml-1">Create one</a>
+				don't have an account?
+				<a href="/signup" class="text-[var(--color-electric)] hover:underline ml-1">create one</a>
 			</p>
-
-			<p class="mt-4 text-center text-xs text-[var(--color-muted)]/60 font-[var(--font-ui)]">
-				<a href="/" class="hover:text-[var(--color-muted)] transition-colors">← Back to homepage</a>
+			<p class="mt-4 text-center">
+				<a href="/" class="font-[var(--font-body)] text-[11px] text-[var(--color-muted)]/50 hover:text-[var(--color-muted)] transition-colors">← back to homepage</a>
 			</p>
 		</div>
 	</div>

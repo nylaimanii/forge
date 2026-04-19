@@ -72,7 +72,7 @@
 			class="
 				relative flex items-center gap-2 px-3 h-8 rounded-lg text-sm transition-all duration-150 font-[var(--font-ui)]
 				{active
-					? 'text-white bg-[var(--color-accent-glow)]'
+					? 'text-[var(--color-electric)] bg-[var(--color-electric-dim)]'
 					: 'text-[var(--color-muted)] hover:text-[var(--color-text)] hover:bg-white/5'
 				}
 			"
@@ -83,7 +83,7 @@
 
 			<!-- active underline accent -->
 			{#if active}
-				<span class="absolute bottom-0 left-3 right-3 h-0.5 rounded-full bg-[var(--color-accent)]"></span>
+				<span class="absolute bottom-0 left-3 right-3 h-0.5 rounded-full bg-[var(--color-electric)]"></span>
 			{/if}
 		</a>
 	{/each}
