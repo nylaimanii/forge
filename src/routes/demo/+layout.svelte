@@ -8,6 +8,4 @@
 </script>
 
 <DemoBanner />
-<div style="padding-top: 40px; min-height: 100vh; background: var(--color-bg);">
-  {@render children()}
-</div>
+{@render children()}
