@@ -12,7 +12,8 @@
 	let projectId = $derived(page.params.id);
 	let selectedTableName = $state('');
 	let tables = $derived($demoData.tables.filter(t => t.projectId === projectId));
-	let rows = $derived(($demoData.rowsByProject[projectId ?? ''] ?? []) as Record<string, unknown>[]);
+	let selectedTable = $derived(tables.find(t => t.name === selectedTableName) ?? tables[0]);
+	let rows = $derived((selectedTable ? ($demoData.rowsByTable[selectedTable.id] ?? []) : []) as Record<string, unknown>[]);
 	let columns = $derived(rows.length > 0 ? Object.keys(rows[0]) : []);
 
 	$effect(() => {

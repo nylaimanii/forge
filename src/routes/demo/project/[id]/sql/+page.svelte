@@ -10,6 +10,16 @@
 	let editorEl: HTMLDivElement | undefined = $state();
 
 	let projectId = $derived(page.params.id);
+	let projectTables = $derived($demoData.tables.filter(t => t.projectId === projectId));
+	let selectedTableName = $state('');
+	let selectedTable = $derived(projectTables.find(t => t.name === selectedTableName) ?? projectTables[0]);
+
+	$effect(() => {
+		if (projectTables.length > 0 && !projectTables.find(t => t.name === selectedTableName)) {
+			selectedTableName = projectTables[0].name;
+		}
+	});
+
 	let sql     = $state('SELECT * FROM patients;');
 	let result  = $state<Record<string, unknown>[] | null>(null);
 	let cols    = $state<string[]>([]);
@@ -45,7 +55,7 @@
 		running = true;
 		setTimeout(() => {
 			running = false;
-			result  = ($demoData.rowsByProject[projectId ?? ''] ?? []) as Record<string, unknown>[];
+			result  = (selectedTable ? ($demoData.rowsByTable[selectedTable.id] ?? []) : []) as Record<string, unknown>[];
 			cols    = result.length > 0 ? Object.keys(result[0]) : [];
 			showToast('ran against demo data — sign up to connect a real database', 'info');
 		}, 400);
