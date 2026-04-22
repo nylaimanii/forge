@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
+	import { page } from '$app/state';
 	import { demoData } from '$lib/stores/demo';
 	import { showToast } from '$lib/stores/toasts';
 	import { Play, Clock, Copy } from 'lucide-svelte';
@@ -8,19 +9,23 @@
 	let editor: any;
 	let editorEl: HTMLDivElement | undefined = $state();
 
-	let sql     = $state('SELECT * FROM pokemon;');
+	let sql     = $state('');
 	let result  = $state<Record<string, unknown>[] | null>(null);
 	let cols    = $state<string[]>([]);
 	let running = $state(false);
 
-	let history = $derived($demoData.queryHistory);
+	let projectId = $derived(page.params.id ?? '');
+	let history   = $derived($demoData.queryHistoryByProject[projectId] ?? $demoData.queryHistory);
 
 	onMount(async () => {
 		const loader = (await import('@monaco-editor/loader')).default;
 		const monaco = await loader.init();
 
+		const defaultSql = `SELECT * FROM ${$demoData.defaultTableByProject[projectId] ?? 'pokemon'};`;
+		sql = defaultSql;
+
 		editor = monaco.editor.create(editorEl!, {
-			value:                 sql,
+			value:                 defaultSql,
 			language:              'sql',
 			theme:                 'vs-dark',
 			minimap:               { enabled: false },
@@ -41,7 +46,7 @@
 		running = true;
 		setTimeout(() => {
 			running = false;
-			result  = $demoData.rows;
+			result  = ($demoData.rowsByProject[projectId] ?? $demoData.rows) as Record<string, unknown>[];
 			cols    = result.length > 0 ? Object.keys(result[0]) : [];
 			showToast('ran against demo data — sign up to connect a real database', 'info');
 		}, 400);

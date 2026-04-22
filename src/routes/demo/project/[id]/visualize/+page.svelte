@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import { demoData } from '$lib/stores/demo';
 	import { showToast } from '$lib/stores/toasts';
 	import TableView from '$components/visualize/TableView.svelte';
@@ -7,11 +8,14 @@
 	type ViewType = 'table' | 'card';
 	let viewType = $state<ViewType>('table');
 
+	let projectId = $derived(page.params.id ?? '');
 	let selectedTableName = $state('pokemon');
+	// reset selected table when project changes
+	$effect(() => { selectedTableName = $demoData.defaultTableByProject[projectId] ?? 'pokemon'; });
+
 	let tables = $derived($demoData.tables);
 
-	// demo rows are always the pokemon data
-	let rows    = $derived($demoData.rows as Record<string, unknown>[]);
+	let rows    = $derived(($demoData.rowsByProject[projectId] ?? $demoData.rows) as Record<string, unknown>[]);
 	let columns = $derived(rows.length > 0 ? Object.keys(rows[0]) : []);
 
 	function warnSave() {

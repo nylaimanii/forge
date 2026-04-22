@@ -1,12 +1,11 @@
 <script lang="ts">
 	import { Sparkles, Info, Copy, Check } from 'lucide-svelte';
+	import { page } from '$app/state';
+	import { demoData } from '$lib/stores/demo';
 	import { showToast } from '$lib/stores/toasts';
 
-	// hardcoded demo schema context
-	const SCHEMA_CONTEXT = [
-		'TABLE pokemon (id INTEGER, name TEXT, type TEXT, hp INTEGER, attack INTEGER, defense INTEGER)',
-		'TABLE trainers (id INTEGER, name TEXT, region TEXT, badge_count INTEGER)',
-	].join('\n');
+	let projectId     = $derived(page.params.id ?? '');
+	let schemaContext = $derived($demoData.schemaByProject[projectId] ?? $demoData.schemaByProject['demo-1']);
 
 	type Mode = 'query' | 'schema';
 	let mode = $state<Mode>('query');
@@ -31,7 +30,7 @@
 		const res = await fetch('/api/ai/generate-query', {
 			method:  'POST',
 			headers: { 'Content-Type': 'application/json' },
-			body:    JSON.stringify({ question, schema: SCHEMA_CONTEXT }),
+			body:    JSON.stringify({ question, schema: schemaContext }),
 		});
 		const payload = await res.json();
 		queryLoading = false;
