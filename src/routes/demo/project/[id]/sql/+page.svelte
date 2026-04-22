@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
-	import { page } from '$app/state';
 	import { demoData } from '$lib/stores/demo';
 	import { showToast } from '$lib/stores/toasts';
 	import { Play, Clock, Copy } from 'lucide-svelte';
@@ -9,23 +8,19 @@
 	let editor: any;
 	let editorEl: HTMLDivElement | undefined = $state();
 
-	let sql     = $state('');
+	let sql     = $state('SELECT * FROM pokemon;');
 	let result  = $state<Record<string, unknown>[] | null>(null);
 	let cols    = $state<string[]>([]);
 	let running = $state(false);
 
-	let projectId = $derived(page.params.id ?? '');
-	let history   = $derived($demoData.queryHistoryByProject[projectId] ?? $demoData.queryHistory);
+	let history = $derived($demoData.queryHistory);
 
 	onMount(async () => {
 		const loader = (await import('@monaco-editor/loader')).default;
 		const monaco = await loader.init();
 
-		const defaultSql = `SELECT * FROM ${$demoData.defaultTableByProject[projectId] ?? 'pokemon'};`;
-		sql = defaultSql;
-
 		editor = monaco.editor.create(editorEl!, {
-			value:                 defaultSql,
+			value:                 sql,
 			language:              'sql',
 			theme:                 'vs-dark',
 			minimap:               { enabled: false },
@@ -46,7 +41,7 @@
 		running = true;
 		setTimeout(() => {
 			running = false;
-			result  = ($demoData.rowsByProject[projectId] ?? $demoData.rows) as Record<string, unknown>[];
+			result  = $demoData.rows;
 			cols    = result.length > 0 ? Object.keys(result[0]) : [];
 			showToast('ran against demo data — sign up to connect a real database', 'info');
 		}, 400);
@@ -62,7 +57,7 @@
 	}
 </script>
 
-<div class="flex overflow-hidden" style="height: calc(100vh - 9rem);">
+<div class="flex overflow-hidden -mt-12" style="height: calc(100vh - 6rem);">
 	<!-- history sidebar -->
 	<div class="w-56 shrink-0 border-r border-[var(--color-border)] bg-[var(--color-surface-1)] flex flex-col">
 		<div class="px-4 py-3 border-b border-[var(--color-border)]">

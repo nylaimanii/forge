@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { Sparkles, Info, Copy, Check } from 'lucide-svelte';
-	import { page } from '$app/state';
-	import { demoData } from '$lib/stores/demo';
 	import { showToast } from '$lib/stores/toasts';
 
-	let projectId     = $derived(page.params.id ?? '');
-	let schemaContext = $derived($demoData.schemaByProject[projectId] ?? $demoData.schemaByProject['demo-1']);
+	// hardcoded demo schema context
+	const SCHEMA_CONTEXT = [
+		'TABLE pokemon (id INTEGER, name TEXT, type TEXT, hp INTEGER, attack INTEGER, defense INTEGER)',
+		'TABLE trainers (id INTEGER, name TEXT, region TEXT, badge_count INTEGER)',
+	].join('\n');
 
 	type Mode = 'query' | 'schema';
 	let mode = $state<Mode>('query');
@@ -30,7 +31,7 @@
 		const res = await fetch('/api/ai/generate-query', {
 			method:  'POST',
 			headers: { 'Content-Type': 'application/json' },
-			body:    JSON.stringify({ question, schema: schemaContext }),
+			body:    JSON.stringify({ question, schema: SCHEMA_CONTEXT }),
 		});
 		const payload = await res.json();
 		queryLoading = false;
@@ -105,7 +106,7 @@
 	}
 </script>
 
-<div class="flex flex-col overflow-hidden" style="height: calc(100vh - 9rem);">
+<div class="flex flex-col overflow-hidden -mt-12" style="height: calc(100vh - 6rem);">
 	<!-- mode toggle -->
 	<div class="shrink-0 flex items-center gap-3 px-6 pt-5 pb-3 border-b border-[var(--color-border)]">
 		<div class="flex items-center gap-1 glass rounded-lg p-1 border border-[var(--color-border)]">
