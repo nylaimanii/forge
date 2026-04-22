@@ -1,19 +1,21 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import { demoData } from '$lib/stores/demo';
 	import { showToast } from '$lib/stores/toasts';
 	import TableView from '$components/visualize/TableView.svelte';
 	import CardView from '$components/visualize/CardView.svelte';
 	import { TableProperties, CreditCard } from 'lucide-svelte';
-	import type { CardConfig } from '$components/visualize/PokemonCard.svelte';
 
 	type ViewType = 'table' | 'card';
 	let viewType = $state<ViewType>('table');
 
+	let projectId = $derived(page.params.id ?? '');
+	let tables = $derived($demoData.tables.filter(t => t.projectId === projectId));
+	let defaultTableName = $derived(tables[0]?.name ?? 'pokemon');
 	let selectedTableName = $state('pokemon');
-	let tables = $derived($demoData.tables);
+	$effect(() => { selectedTableName = defaultTableName; });
 
-	// demo rows are always the pokemon data
-	let rows    = $derived($demoData.rows as Record<string, unknown>[]);
+	let rows    = $derived(($demoData.rowsByProject[projectId] ?? []) as Record<string, unknown>[]);
 	let columns = $derived(rows.length > 0 ? Object.keys(rows[0]) : []);
 
 	function warnSave() {

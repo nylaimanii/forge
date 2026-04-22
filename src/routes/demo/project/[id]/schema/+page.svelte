@@ -1,9 +1,11 @@
 <script lang="ts">
+  import { page } from '$app/state';
   import { demoData } from '$lib/stores/demo';
   import { showToast } from '$lib/stores/toasts';
   import { ZoomIn, ZoomOut, Plus } from 'lucide-svelte';
 
-  let tables = $derived($demoData.tables);
+  let projectId = $derived(page.params.id ?? '');
+  let tables = $derived($demoData.tables.filter(t => t.projectId === projectId));
   let panX = $state(0);
   let panY = $state(0);
   let zoom = $state(1);
