@@ -57,7 +57,7 @@
 	}
 </script>
 
-<div class="flex overflow-hidden -mt-12" style="height: calc(100vh - 6rem);">
+<div class="flex overflow-hidden" style="height: calc(100vh - 9rem);">
 	<!-- history sidebar -->
 	<div class="w-56 shrink-0 border-r border-[var(--color-border)] bg-[var(--color-surface-1)] flex flex-col">
 		<div class="px-4 py-3 border-b border-[var(--color-border)]">

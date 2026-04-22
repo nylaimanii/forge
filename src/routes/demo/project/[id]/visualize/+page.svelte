@@ -4,8 +4,6 @@
 	import TableView from '$components/visualize/TableView.svelte';
 	import CardView from '$components/visualize/CardView.svelte';
 	import { TableProperties, CreditCard } from 'lucide-svelte';
-	import type { CardConfig } from '$components/visualize/PokemonCard.svelte';
-
 	type ViewType = 'table' | 'card';
 	let viewType = $state<ViewType>('table');
 
@@ -21,7 +19,7 @@
 	}
 </script>
 
-<div class="flex flex-col overflow-hidden -mt-12" style="height: calc(100vh - 6rem);">
+<div class="flex flex-col overflow-hidden" style="height: calc(100vh - 9rem);">
 	<!-- toolbar -->
 	<div class="shrink-0 flex items-center gap-3 px-6 py-3 border-b border-[var(--color-border)]">
 		<!-- table selector -->

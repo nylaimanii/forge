@@ -93,7 +93,7 @@
 	});
 </script>
 
-<div class="relative -mt-12" style="height: calc(100vh - 6rem); background: var(--color-bg); overflow: hidden;">
+<div class="relative" style="height: calc(100vh - 9rem); background: var(--color-bg); overflow: hidden;">
 
 	<!-- toolbar -->
 	<div class="absolute top-3 left-3 z-10 flex items-center gap-2 glass border border-[var(--color-border)] rounded-xl px-3 py-2">

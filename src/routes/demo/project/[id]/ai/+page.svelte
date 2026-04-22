@@ -106,7 +106,7 @@
 	}
 </script>
 
-<div class="flex flex-col overflow-hidden -mt-12" style="height: calc(100vh - 6rem);">
+<div class="flex flex-col overflow-hidden" style="height: calc(100vh - 9rem);">
 	<!-- mode toggle -->
 	<div class="shrink-0 flex items-center gap-3 px-6 pt-5 pb-3 border-b border-[var(--color-border)]">
 		<div class="flex items-center gap-1 glass rounded-lg p-1 border border-[var(--color-border)]">
