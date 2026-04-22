@@ -9,14 +9,17 @@
 	type ViewType = 'table' | 'card';
 	let viewType = $state<ViewType>('table');
 
-	let projectId = $derived(page.params.id ?? '');
+	let projectId = $derived(page.params.id);
+	let selectedTableName = $state('');
 	let tables = $derived($demoData.tables.filter(t => t.projectId === projectId));
-	let defaultTableName = $derived(tables[0]?.name ?? 'pokemon');
-	let selectedTableName = $state('pokemon');
-	$effect(() => { selectedTableName = defaultTableName; });
-
-	let rows    = $derived(($demoData.rowsByProject[projectId] ?? []) as Record<string, unknown>[]);
+	let rows = $derived(($demoData.rowsByProject[projectId ?? ''] ?? []) as Record<string, unknown>[]);
 	let columns = $derived(rows.length > 0 ? Object.keys(rows[0]) : []);
+
+	$effect(() => {
+		if (tables.length > 0 && !tables.find(t => t.name === selectedTableName)) {
+			selectedTableName = tables[0].name;
+		}
+	});
 
 	function warnSave() {
 		showToast('sign up to save your visualization config', 'info');

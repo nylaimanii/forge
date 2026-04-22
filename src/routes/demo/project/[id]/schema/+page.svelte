@@ -4,7 +4,7 @@
   import { showToast } from '$lib/stores/toasts';
   import { ZoomIn, ZoomOut, Plus } from 'lucide-svelte';
 
-  let projectId = $derived(page.params.id ?? '');
+  let projectId = $derived(page.params.id);
   let tables = $derived($demoData.tables.filter(t => t.projectId === projectId));
   let panX = $state(0);
   let panY = $state(0);
