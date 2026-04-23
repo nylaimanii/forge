@@ -387,17 +387,17 @@
       {#if cardMenuOpen}
         <div
           class="absolute top-full mt-1.5 left-0 z-30 glass border border-[var(--color-border)] rounded-xl overflow-hidden"
-          style="width:240px; box-shadow: 0 8px 32px rgba(0,0,0,0.5);"
+          style="width:260px; box-shadow:0 8px 32px rgba(0,0,0,0.6);"
         >
-          <!-- table picker -->
-          <div class="px-3 pt-3 pb-2">
-            <p class="text-[9px] text-[var(--color-muted)] font-[var(--font-ui)] uppercase tracking-widest mb-1.5">table</p>
-            <div class="flex flex-wrap gap-1">
+          <!-- TABLE section -->
+          <div class="px-3 pt-3 pb-3">
+            <p class="text-[9px] text-[var(--color-muted)] font-[var(--font-ui)] uppercase tracking-widest mb-2">table</p>
+            <div class="flex flex-wrap gap-1.5">
               {#each projectTables as tbl}
                 <button
                   onclick={() => { selectedTableId = tbl.id; selectedRowIndex = 0; }}
-                  class="px-2 py-1 rounded-lg text-[10px] font-[var(--font-ui)] transition-all"
-                  style="background:{selectedTableId === tbl.id ? accentColor + '22' : 'rgba(255,255,255,0.04)'}; color:{selectedTableId === tbl.id ? accentColor : 'var(--color-muted)'}; border:1px solid {selectedTableId === tbl.id ? accentColor + '44' : 'transparent'};"
+                  class="px-2.5 py-1.5 rounded-lg text-[11px] font-[var(--font-ui)] font-medium transition-all"
+                  style="background:{selectedTableId === tbl.id ? accentColor + '28' : 'rgba(255,255,255,0.06)'}; color:{selectedTableId === tbl.id ? accentColor : 'var(--color-text)'}; border:1px solid {selectedTableId === tbl.id ? accentColor + '55' : 'rgba(255,255,255,0.08)'};"
                 >{tbl.name}</button>
               {/each}
             </div>
@@ -405,29 +405,35 @@
 
           <div class="h-px bg-[var(--color-border)]"></div>
 
-          <!-- row picker -->
-          <div class="px-3 py-2">
-            <p class="text-[9px] text-[var(--color-muted)] font-[var(--font-ui)] uppercase tracking-widest mb-1.5">row</p>
-            <div class="flex flex-col gap-0.5 max-h-36 overflow-y-auto">
+          <!-- ROW section -->
+          <div class="px-3 py-3">
+            <p class="text-[9px] text-[var(--color-muted)] font-[var(--font-ui)] uppercase tracking-widest mb-2">row</p>
+            <div class="flex flex-col gap-0.5 max-h-44 overflow-y-auto pr-1" style="scrollbar-width:thin;">
               {#each selectedRows as row, i}
                 {@const label = String(row['name'] ?? row['title'] ?? row['author_name'] ?? row['id'] ?? i + 1)}
+                {@const isSelected = selectedRowIndex === i}
                 <button
                   onclick={() => (selectedRowIndex = i)}
-                  class="text-left px-2 py-1.5 rounded-lg text-[10px] font-[var(--font-ui)] transition-all truncate"
-                  style="background:{selectedRowIndex === i ? accentColor + '18' : 'transparent'}; color:{selectedRowIndex === i ? accentColor : 'var(--color-muted)'};"
-                >{label}</button>
+                  class="text-left w-full px-2.5 py-2 rounded-lg transition-all"
+                  style="background:{isSelected ? accentColor + '22' : 'transparent'}; border:1px solid {isSelected ? accentColor + '44' : 'transparent'};"
+                >
+                  <span
+                    class="text-[12px] font-[var(--font-ui)] block truncate leading-tight"
+                    style="color:{isSelected ? accentColor : 'var(--color-text)'};"
+                  >{label}</span>
+                </button>
               {/each}
             </div>
           </div>
 
           <div class="h-px bg-[var(--color-border)]"></div>
 
-          <!-- place button -->
-          <div class="px-3 py-2.5">
+          <!-- PLACE button -->
+          <div class="px-3 py-3">
             <button
               onclick={addCard}
-              class="w-full flex items-center justify-center gap-1.5 h-7 rounded-lg text-[11px] font-[var(--font-display)] font-semibold transition-all"
-              style="background:{accentColor}22; color:{accentColor}; border:1px solid {accentColor}44;"
+              class="w-full flex items-center justify-center gap-1.5 h-8 rounded-lg text-[12px] font-[var(--font-display)] font-semibold transition-all"
+              style="background:{accentColor}28; color:{accentColor}; border:1px solid {accentColor}50;"
             >
               ＋ place on board
             </button>
