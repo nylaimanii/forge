@@ -480,7 +480,7 @@
       style="
         left:{card.x}px;
         top:{card.y}px;
-        width:220px;
+        width:260px;
         z-index:10;
         cursor:{draggingCardId === card.id ? 'grabbing' : 'grab'};
         border-radius:12px;
@@ -579,7 +579,7 @@
 
       <!-- data rows -->
       <div style="padding:6px 0 8px; position:relative; z-index:2;">
-        {#each Object.entries(card.row).slice(0, 6) as [key, val], rowI}
+        {#each Object.entries(card.row) as [key, val], rowI}
           <div style="
             display:flex;
             align-items:baseline;
@@ -603,11 +603,11 @@
               font-size:11px;
               color:#e2e8f0;
               text-align:right;
-              overflow:hidden;
-              text-overflow:ellipsis;
-              white-space:nowrap;
-              max-width:110px;
+              word-break:break-word;
+              white-space:normal;
               letter-spacing:0.02em;
+              flex:1;
+              min-width:0;
             ">{fmtVal(val)}</span>
           </div>
         {/each}
