@@ -276,6 +276,66 @@
     {/if}
   </div>
 
+  <!-- ── hover data overlay ── -->
+  {#if hovered}
+    <div
+      class="absolute inset-x-0 bottom-0 z-30 rounded-b-2xl overflow-y-auto"
+      style="
+        max-height: 78%;
+        background: linear-gradient(180deg, {palette.headerA}ee 0%, #05050aee 18%, #05050af5 100%);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-top: 1px solid {palette.border}55;
+        padding: 8px 0 6px;
+        scrollbar-width: none;
+      "
+    >
+      <!-- tiny label -->
+      <p style="
+        font-family:var(--font-body);
+        font-size:7px;
+        letter-spacing:0.18em;
+        text-transform:uppercase;
+        color:{palette.accent};
+        opacity:0.6;
+        text-align:center;
+        margin-bottom:5px;
+      ">[ all fields ]</p>
+
+      {#each Object.entries(row) as [k, v]}
+        <div style="
+          display:flex;
+          align-items:flex-start;
+          justify-content:space-between;
+          gap:6px;
+          padding:3px 10px;
+          border-bottom:1px solid {palette.border}12;
+        ">
+          <span style="
+            font-family:var(--font-body);
+            font-size:7.5px;
+            letter-spacing:0.1em;
+            text-transform:uppercase;
+            color:{palette.accent};
+            opacity:0.65;
+            flex-shrink:0;
+            padding-top:1px;
+          ">{k}</span>
+          <span style="
+            font-family:var(--font-body);
+            font-size:10px;
+            color:#e2e8f0;
+            text-align:right;
+            word-break:break-word;
+            white-space:normal;
+            line-height:1.4;
+            max-width:110px;
+          ">{fmtValue(v)}</span>
+        </div>
+      {/each}
+    </div>
+  {/if}
+
   <!-- ── footer ── -->
   <div
     class="flex items-center justify-between px-3 py-1.5"
