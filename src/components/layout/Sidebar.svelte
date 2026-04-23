@@ -1,86 +1,107 @@
 <script lang="ts">
-	import { page } from '$app/state';
-	import Tooltip from '$components/ui/Tooltip.svelte';
-	import {
-		LayoutDashboard,
-		Database,
-		Code,
-		Sparkles,
-		Image,
-		PenLine,
-		Settings
-	} from 'lucide-svelte';
+  import { page } from '$app/state';
+  import Tooltip from '$components/ui/Tooltip.svelte';
+  import { LayoutDashboard, Database, Code, Sparkles, Image, PenLine, FormInput, Zap, Settings } from 'lucide-svelte';
 
-	// nav items — icon + label + route
-	const navItems = [
-		{ icon: LayoutDashboard, label: 'Dashboard',   href: '/dashboard'  },
-		{ icon: Database,        label: 'Schema',       href: '/schema'     },
-		{ icon: Code,            label: 'SQL Editor',   href: '/sql'        },
-		{ icon: Sparkles,        label: 'AI Mode',      href: '/ai'         },
-		{ icon: Image,           label: 'Visualize',    href: '/visualize'  },
-		{ icon: PenLine,         label: 'Whiteboard',   href: '/whiteboard' },
-	];
+  // derive the project id from the URL if we're inside /project/[id]/*
+  let projectId = $derived(
+    (() => {
+      const match = page.url.pathname.match(/\/project\/([^/]+)/);
+      return match ? match[1] : null;
+    })()
+  );
 
-	let currentPath = $derived(page.url.pathname);
+  // top nav items — only shown when a project is open
+  const projectNavItems = [
+    { icon: Database,   label: 'Schema',     view: 'schema'     },
+    { icon: Code,       label: 'SQL',        view: 'sql'        },
+    { icon: Sparkles,   label: 'AI',         view: 'ai'         },
+    { icon: Image,      label: 'Visualize',  view: 'visualize'  },
+    { icon: PenLine,    label: 'Whiteboard', view: 'whiteboard' },
+    { icon: FormInput,  label: 'Forms',      view: 'forms'      },
+    { icon: Zap,        label: 'Scripts',    view: 'scripts'    },
+  ];
 
-	function isActive(href: string) {
-		return currentPath === href || currentPath.startsWith(href + '/');
-	}
+  let currentPath = $derived(page.url.pathname);
+
+  function projectHref(view: string): string {
+    return projectId ? `/project/${projectId}/${view}` : '/dashboard';
+  }
+
+  function isProjectViewActive(view: string): boolean {
+    return currentPath.includes(`/${view}`);
+  }
+
+  function isDashboardActive(): boolean {
+    return currentPath === '/dashboard' || currentPath.startsWith('/dashboard/');
+  }
 </script>
 
 <aside class="fixed left-0 top-0 h-screen w-16 z-40 flex flex-col items-center py-4 border-r border-[var(--color-border)] bg-[var(--color-surface-1)]">
 
-	<!-- forge logo mark — electric blue -->
-	<a
-		href="/dashboard"
-		class="w-9 h-9 mb-6 flex items-center justify-center rounded-xl bg-[var(--color-electric)] text-white font-[var(--font-display)] font-bold text-lg hover:shadow-[0_0_24px_var(--color-electric-glow)] transition-all duration-200"
-		aria-label="Forge dashboard"
-	>
-		f
-	</a>
+  <!-- forge logo → dashboard -->
+  <a
+    href="/dashboard"
+    class="w-9 h-9 mb-6 flex items-center justify-center rounded-xl bg-[var(--color-electric)] text-white font-[var(--font-display)] font-bold text-lg hover:shadow-[0_0_24px_var(--color-electric-glow)] transition-all duration-200"
+    aria-label="Forge dashboard"
+  >f</a>
 
-	<!-- nav icons -->
-	<nav class="flex flex-col items-center gap-1 flex-1">
-		{#each navItems as item}
-			{@const active = isActive(item.href)}
-			<Tooltip label={item.label} position="right">
-				{#snippet children()}
-					<a
-						href={item.href}
-						class="
-							relative w-10 h-10 flex items-center justify-center rounded-xl
-							transition-all duration-150
-							{active
-								? 'text-[var(--color-electric)] bg-[var(--color-electric-dim)]'
-								: 'text-[var(--color-muted)] hover:text-[var(--color-text)] hover:bg-white/5'
-							}
-						"
-						aria-label={item.label}
-					>
-						{#if active}
-							<span class="absolute left-0 top-2 bottom-2 w-0.5 rounded-r-full bg-[var(--color-electric)] shadow-[0_0_8px_var(--color-electric)]"></span>
-						{/if}
-						<item.icon size={18} strokeWidth={active ? 2 : 1.75} />
-					</a>
-				{/snippet}
-			</Tooltip>
-		{/each}
-	</nav>
+  <nav class="flex flex-col items-center gap-1 flex-1">
 
-	<!-- settings pinned to bottom -->
-	<Tooltip label="Settings" position="right">
-		{#snippet children()}
-			<a
-				href="/settings"
-				class="
-					w-10 h-10 flex items-center justify-center rounded-xl
-					text-[var(--color-muted)] hover:text-[var(--color-text)] hover:bg-white/5
-					transition-all duration-150
-				"
-				aria-label="Settings"
-			>
-				<Settings size={18} strokeWidth={1.75} />
-			</a>
-		{/snippet}
-	</Tooltip>
+    <!-- dashboard icon — always shown -->
+    <Tooltip label="Dashboard" position="right">
+      {#snippet children()}
+        {@const active = isDashboardActive()}
+        <a
+          href="/dashboard"
+          class="relative w-10 h-10 flex items-center justify-center rounded-xl transition-all duration-150
+            {active ? 'text-[var(--color-electric)] bg-[var(--color-electric-dim)]' : 'text-[var(--color-muted)] hover:text-[var(--color-text)] hover:bg-white/5'}"
+          aria-label="Dashboard"
+        >
+          {#if active}
+            <span class="absolute left-0 top-2 bottom-2 w-0.5 rounded-r-full bg-[var(--color-electric)] shadow-[0_0_8px_var(--color-electric)]"></span>
+          {/if}
+          <LayoutDashboard size={18} strokeWidth={active ? 2 : 1.75} />
+        </a>
+      {/snippet}
+    </Tooltip>
+
+    <!-- project nav items — only shown when inside a project -->
+    {#if projectId}
+      <div class="w-8 h-px bg-[var(--color-border)] my-1"></div>
+      {#each projectNavItems as item}
+        {@const active = isProjectViewActive(item.view)}
+        <Tooltip label={item.label} position="right">
+          {#snippet children()}
+            <a
+              href={projectHref(item.view)}
+              class="relative w-10 h-10 flex items-center justify-center rounded-xl transition-all duration-150
+                {active ? 'text-[var(--color-electric)] bg-[var(--color-electric-dim)]' : 'text-[var(--color-muted)] hover:text-[var(--color-text)] hover:bg-white/5'}"
+              aria-label={item.label}
+            >
+              {#if active}
+                <span class="absolute left-0 top-2 bottom-2 w-0.5 rounded-r-full bg-[var(--color-electric)] shadow-[0_0_8px_var(--color-electric)]"></span>
+              {/if}
+              <item.icon size={18} strokeWidth={active ? 2 : 1.75} />
+            </a>
+          {/snippet}
+        </Tooltip>
+      {/each}
+    {/if}
+
+  </nav>
+
+  <!-- settings pinned to bottom — always shown -->
+  <Tooltip label="Settings" position="right">
+    {#snippet children()}
+      <a
+        href={projectId ? `/project/${projectId}/settings` : '/dashboard'}
+        class="w-10 h-10 flex items-center justify-center rounded-xl text-[var(--color-muted)] hover:text-[var(--color-text)] hover:bg-white/5 transition-all duration-150"
+        aria-label="Settings"
+      >
+        <Settings size={18} strokeWidth={1.75} />
+      </a>
+    {/snippet}
+  </Tooltip>
+
 </aside>
