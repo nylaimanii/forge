@@ -1,6 +1,73 @@
 <script lang="ts">
+	import { page } from '$app/state';
+	import { onMount, onDestroy } from 'svelte';
 	import { Sparkles, Info, Copy, Check } from 'lucide-svelte';
 	import { showToast } from '$lib/stores/toasts';
+
+	// ── per-project example questions ─────────────────────────────────────────────
+	const EXAMPLE_QUESTIONS: Record<string, string[]> = {
+		'demo-1': [
+			'Show all active patients ordered by name',
+			'Which patients have critical status?',
+			'Count patients grouped by blood type',
+			'List appointments in the Cardiology department',
+			'Show diagnoses with severity of severe',
+			'Find all appointments scheduled this week',
+			'Which doctors have the most appointments?',
+			'Show patients diagnosed with diabetes',
+		],
+		'demo-2': [
+			'Show products with less than 50 units in stock',
+			'Which products have a rating above 4.7?',
+			'Total inventory value grouped by category',
+			'Find the top 5 customers by lifetime value',
+			'Show all orders with status shipped',
+			'Which Electronics products cost over $100?',
+			'Count orders grouped by status',
+			'Show customers from California cities',
+		],
+		'demo-3': [
+			'Show the 5 most viewed published posts',
+			'Count posts and total views per author',
+			'Which posts are still unpublished drafts?',
+			'Show comments with more than 20 likes',
+			'Find all posts in the Tutorial category',
+			'Which author has the most followers?',
+			'Show posts published after April 1st 2026',
+			'Count posts grouped by category',
+		],
+	};
+
+	const FALLBACK_QUESTIONS = [
+		'Show all records ordered by id',
+		'Count total rows in the table',
+		'Find rows where a column is not null',
+	];
+
+	let projectId = $derived(page.params.id ?? '');
+	let exampleQuestions = $derived(EXAMPLE_QUESTIONS[projectId] ?? FALLBACK_QUESTIONS);
+	let exampleIndex = $state(0);
+	let exampleVisible = $state(true);
+
+	let rotationInterval: ReturnType<typeof setInterval> | null = null;
+
+	onMount(() => {
+		rotationInterval = setInterval(() => {
+			exampleVisible = false;
+			setTimeout(() => {
+				exampleIndex = (exampleIndex + 1) % exampleQuestions.length;
+				exampleVisible = true;
+			}, 300);
+		}, 3000);
+	});
+
+	onDestroy(() => {
+		if (rotationInterval) clearInterval(rotationInterval);
+	});
+
+	function useExample(q: string) {
+		question = q;
+	}
 
 	// hardcoded demo schema context
 	const SCHEMA_CONTEXT = [
@@ -144,7 +211,7 @@
 						<textarea
 							id="question"
 							bind:value={question}
-							placeholder={"ask about the demo data...\ne.g. 'show me all pokemon with HP over 100'"}
+							placeholder="ask about the demo data..."
 							class="w-full h-32 resize-none rounded-xl px-4 py-3 text-sm
 								bg-[var(--color-surface-2)] text-[var(--color-text)]
 								border border-[var(--color-border)] font-[var(--font-body)]
@@ -152,6 +219,17 @@
 								placeholder:text-[var(--color-muted)] transition-colors"
 							onkeydown={(e) => { if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') handleGenerateQuery(); }}
 						></textarea>
+
+						<!-- rotating example question chip -->
+						<div class="flex items-center gap-2">
+							<span class="text-[10px] text-[var(--color-muted)] font-[var(--font-ui)] uppercase tracking-widest shrink-0">try:</span>
+							<button
+								type="button"
+								onclick={() => useExample(exampleQuestions[exampleIndex])}
+								class="text-left text-xs font-[var(--font-ui)] text-[var(--color-electric)] hover:text-white border border-[var(--color-electric)]/30 hover:border-[var(--color-electric)] hover:bg-[var(--color-electric-dim)] rounded-lg px-3 py-1.5 transition-all duration-200 truncate max-w-[420px]"
+								style="opacity: {exampleVisible ? 1 : 0}; transition: opacity 0.3s ease;"
+							>{exampleQuestions[exampleIndex]}</button>
+						</div>
 					</div>
 
 					<div class="flex items-center gap-2">
