@@ -70,26 +70,51 @@
   let hovered = $state(false);
 </script>
 
-<!-- card shell — fixed 200 px wide to match CardView grid -->
+<!-- card shell -->
 <div
   class="relative w-[200px] rounded-2xl overflow-hidden select-none cursor-default transition-all duration-300"
   style="
-    border: 2.5px solid {palette.border};
+    border: 1.5px solid {palette.border}88;
     box-shadow: {hovered
-      ? `0 0 0 1px ${palette.border}55, 0 12px 40px ${palette.border}50, inset 0 1px 0 rgba(255,255,255,0.08)`
-      : '0 4px 16px rgba(0,0,0,0.4)'};
-    transform: {hovered ? 'translateY(-4px) scale(1.02)' : 'none'};
+      ? `0 0 0 1px ${palette.border}44, 0 0 32px ${palette.border}55, 0 16px 48px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.07)`
+      : `0 0 12px ${palette.border}22, 0 6px 24px rgba(0,0,0,0.5)`};
+    transform: {hovered ? 'translateY(-5px) scale(1.025)' : 'none'};
+    background: #05050a;
   "
   role="article"
   onmouseenter={() => (hovered = true)}
   onmouseleave={() => (hovered = false)}
 >
 
-  <!-- ── holographic shimmer overlay (only visible on hover) ── -->
+  <!-- top neon edge bar -->
+  <div style="
+    height: 2px;
+    background: linear-gradient(90deg, transparent 0%, {palette.border}aa 30%, {palette.accent} 50%, {palette.border}aa 70%, transparent 100%);
+    box-shadow: 0 0 8px {palette.accent};
+  "></div>
+
+  <!-- corner brackets — top left -->
+  <div class="absolute pointer-events-none" style="top:6px; left:6px; z-index:20;">
+    <div style="width:10px; height:10px; border-top:1.5px solid {palette.accent}; border-left:1.5px solid {palette.accent}; opacity:0.7;"></div>
+  </div>
+  <!-- corner brackets — top right -->
+  <div class="absolute pointer-events-none" style="top:6px; right:6px; z-index:20;">
+    <div style="width:10px; height:10px; border-top:1.5px solid {palette.accent}; border-right:1.5px solid {palette.accent}; opacity:0.7;"></div>
+  </div>
+  <!-- corner brackets — bottom left -->
+  <div class="absolute pointer-events-none" style="bottom:6px; left:6px; z-index:20;">
+    <div style="width:10px; height:10px; border-bottom:1.5px solid {palette.accent}; border-left:1.5px solid {palette.accent}; opacity:0.7;"></div>
+  </div>
+  <!-- corner brackets — bottom right -->
+  <div class="absolute pointer-events-none" style="bottom:6px; right:6px; z-index:20;">
+    <div style="width:10px; height:10px; border-bottom:1.5px solid {palette.accent}; border-right:1.5px solid {palette.accent}; opacity:0.7;"></div>
+  </div>
+
+  <!-- holographic shimmer overlay -->
   <div
     class="absolute inset-0 pointer-events-none z-10 rounded-2xl transition-opacity duration-300"
     style="
-      opacity: {hovered ? 0.07 : 0};
+      opacity: {hovered ? 0.06 : 0};
       background: linear-gradient(135deg,
         transparent 0%,
         {palette.accent}99 25%,
@@ -102,69 +127,115 @@
 
   <!-- ── header zone ── -->
   <div
-    class="relative flex flex-col items-center justify-center gap-2 pt-4 pb-3"
-    style="background: linear-gradient(160deg, {palette.headerA} 0%, {palette.headerB} 100%);"
+    class="relative flex flex-col items-center justify-center gap-2 pt-5 pb-3"
+    style="
+      background:
+        linear-gradient(160deg, {palette.headerA} 0%, {palette.headerB} 100%);
+      background-image:
+        linear-gradient(160deg, {palette.headerA} 0%, {palette.headerB} 100%),
+        repeating-linear-gradient(0deg, transparent, transparent 18px, {palette.border}08 18px, {palette.border}08 19px),
+        repeating-linear-gradient(90deg, transparent, transparent 18px, {palette.border}08 18px, {palette.border}08 19px);
+      background-blend-mode: normal, overlay, overlay;
+    "
   >
-    <!-- card number top-left -->
+    <!-- card number badge -->
     {#if cardNumber}
-      <span
-        class="absolute top-2 left-2.5 font-[var(--font-body)] font-bold"
-        style="font-size: 9px; color: {palette.accent}; letter-spacing: 0.1em; opacity: 0.85;"
-      >#{cardNumber}</span>
+      <div class="absolute top-2.5 left-2.5 flex items-center gap-1">
+        <span style="width:4px; height:4px; border-radius:50%; background:{palette.accent}; box-shadow:0 0 5px {palette.accent}; display:inline-block;"></span>
+        <span
+          class="font-[var(--font-body)] font-bold"
+          style="font-size: 8px; color: {palette.accent}; letter-spacing: 0.12em; opacity: 0.9;"
+        >#{cardNumber}</span>
+      </div>
     {/if}
 
-    <!-- type badge top-right -->
+    <!-- type badge -->
     {#if typeValue}
       <span
-        class="absolute top-2 right-2 px-1.5 py-0.5 rounded-md font-[var(--font-ui)] font-bold"
-        style="font-size: 8px; background: {palette.accent}22; color: {palette.accent}; border: 1px solid {palette.accent}44; letter-spacing: 0.04em;"
+        class="absolute top-2.5 right-2.5 px-1.5 py-0.5 rounded font-[var(--font-body)] font-bold"
+        style="font-size: 7px; background: {palette.accent}18; color: {palette.accent}; border: 1px solid {palette.accent}50; letter-spacing: 0.1em; text-transform:uppercase;"
       >{typeValue}</span>
     {/if}
 
-    <!-- avatar / image -->
+    <!-- avatar — hexagon scanner style -->
     {#if imageValue && isImageURL(imageValue)}
-      <img
-        src={imageValue}
-        alt={titleValue}
-        class="w-20 h-20 rounded-xl object-cover"
-        style="box-shadow: 0 4px 20px {palette.border}60;"
-      />
+      <div style="position:relative; width:76px; height:76px;">
+        <div style="
+          width:76px; height:76px; border-radius:18px;
+          border: 2px solid {palette.border}66;
+          box-shadow: 0 0 16px {palette.border}55, inset 0 0 12px {palette.border}22;
+          overflow:hidden;
+        ">
+          <img src={imageValue} alt={titleValue} style="width:100%; height:100%; object-fit:cover;" />
+        </div>
+      </div>
     {:else}
-      <div
-        class="w-20 h-20 rounded-xl flex items-center justify-center font-[var(--font-display)] font-black"
-        style="
-          font-size: 28px;
-          background: linear-gradient(135deg, {palette.border}30, {palette.border}10);
-          border: 1.5px solid {palette.border}40;
-          color: {palette.text};
-          box-shadow: 0 4px 20px {palette.border}30;
-          letter-spacing: -0.02em;
-        "
-      >{initials(titleValue)}</div>
+      <div style="position:relative; width:76px; height:76px;">
+        <!-- hex ring -->
+        <div style="
+          position:absolute; inset:-3px;
+          border-radius:20px;
+          border: 1px solid {palette.border}55;
+          box-shadow: 0 0 12px {palette.border}40;
+        "></div>
+        <!-- scan line -->
+        <div style="
+          position:absolute; top:0; left:0; right:0; height:2px;
+          background:linear-gradient(90deg, transparent, {palette.accent}cc, transparent);
+          box-shadow:0 0 6px {palette.accent};
+          opacity:{hovered ? 0.9 : 0.4};
+          transition:opacity 0.3s;
+        "></div>
+        <!-- main tile -->
+        <div style="
+          width:76px; height:76px;
+          border-radius:18px;
+          display:flex; align-items:center; justify-content:center;
+          background: linear-gradient(145deg, {palette.border}28 0%, {palette.border}08 100%);
+          border: 1.5px solid {palette.border}50;
+          box-shadow: 0 0 20px {palette.border}30, inset 0 1px 0 rgba(255,255,255,0.06);
+        ">
+          <!-- corner ticks inside avatar -->
+          <div style="position:absolute; top:5px; left:5px; width:7px; height:7px; border-top:1px solid {palette.accent}80; border-left:1px solid {palette.accent}80;"></div>
+          <div style="position:absolute; top:5px; right:5px; width:7px; height:7px; border-top:1px solid {palette.accent}80; border-right:1px solid {palette.accent}80;"></div>
+          <div style="position:absolute; bottom:5px; left:5px; width:7px; height:7px; border-bottom:1px solid {palette.accent}80; border-left:1px solid {palette.accent}80;"></div>
+          <div style="position:absolute; bottom:5px; right:5px; width:7px; height:7px; border-bottom:1px solid {palette.accent}80; border-right:1px solid {palette.accent}80;"></div>
+          <span
+            style="
+              font-family: var(--font-display);
+              font-size: 26px;
+              font-weight: 900;
+              color: {palette.text};
+              letter-spacing: -0.03em;
+              text-shadow: 0 0 20px {palette.accent}99;
+            "
+          >{initials(titleValue)}</span>
+        </div>
+      </div>
     {/if}
 
     <!-- title -->
     <p
-      class="w-full px-3 text-center font-[var(--font-display)] font-bold leading-tight truncate"
-      style="font-size: 13px; color: {palette.text};"
+      class="w-full px-3 text-center font-[var(--font-display)] font-bold leading-tight"
+      style="font-size: 13px; color: {palette.text}; text-shadow: 0 0 12px {palette.accent}44; word-break:break-word;"
     >{titleValue}</p>
 
     <!-- subtitle -->
     {#if subtitleVal}
       <p
-        class="w-full px-3 -mt-1 text-center font-[var(--font-ui)] truncate"
-        style="font-size: 10px; color: {palette.accent}; opacity: 0.85;"
+        class="w-full px-4 -mt-1 text-center font-[var(--font-body)] truncate"
+        style="font-size: 9px; color: {palette.accent}; opacity: 0.8; letter-spacing:0.06em; text-transform:uppercase;"
       >{subtitleVal}</p>
     {/if}
   </div>
 
-  <!-- ── divider line with accent glow ── -->
-  <div style="height: 1.5px; background: linear-gradient(90deg, transparent, {palette.border}, transparent);"></div>
+  <!-- divider -->
+  <div style="height:1px; background:linear-gradient(90deg, transparent, {palette.border}88, transparent); box-shadow:0 0 4px {palette.border}44;"></div>
 
   <!-- ── stat block ── -->
   <div
     class="px-3 py-2.5 flex flex-col gap-2"
-    style="background: #0d0d14;"
+    style="background: linear-gradient(180deg, #0d0d16 0%, #09090f 100%);"
   >
     {#each [stat1, stat2, stat3].filter(Boolean) as stat}
       {#if stat}
@@ -172,19 +243,24 @@
         <div class="flex flex-col gap-1">
           <div class="flex items-center justify-between">
             <span
-              class="font-[var(--font-ui)] uppercase"
-              style="font-size: 9px; letter-spacing: 0.08em; color: {palette.accent}; opacity: 0.7;"
-            >{stat.label.slice(0, 10)}</span>
+              class="font-[var(--font-body)] uppercase"
+              style="font-size: 8px; letter-spacing: 0.1em; color: {palette.accent}; opacity: 0.65;"
+            >{stat.label.slice(0, 12)}</span>
             <span
               class="font-[var(--font-body)] font-bold"
-              style="font-size: 11px; color: {palette.text};"
+              style="font-size: 11px; color: {palette.text}; text-shadow:0 0 8px {palette.accent}55;"
             >{fmtValue(stat.value)}</span>
           </div>
           {#if typeof stat.value === 'number'}
-            <div class="w-full rounded-full overflow-hidden" style="height: 3px; background: rgba(255,255,255,0.06);">
+            <div style="width:100%; height:3px; border-radius:9999px; background:rgba(255,255,255,0.05); overflow:hidden; position:relative;">
               <div
-                class="h-full rounded-full transition-all duration-700"
-                style="width: {pct}%; background: linear-gradient(90deg, {palette.border}, {palette.accent});"
+                style="
+                  height:100%; border-radius:9999px;
+                  width:{pct}%;
+                  background:linear-gradient(90deg, {palette.border}88, {palette.accent});
+                  box-shadow:0 0 6px {palette.accent}88;
+                  transition:width 0.7s ease;
+                "
               ></div>
             </div>
           {/if}
@@ -192,27 +268,35 @@
       {/if}
     {/each}
 
-    <!-- empty state when no stats configured -->
     {#if !stat1 && !stat2 && !stat3}
-      <p class="text-center font-[var(--font-ui)]" style="font-size: 10px; color: rgba(255,255,255,0.2); padding: 4px 0;">
-        no stats — use card designer
-      </p>
+      <p
+        class="text-center font-[var(--font-body)]"
+        style="font-size: 9px; color: {palette.border}44; padding: 4px 0; letter-spacing:0.08em;"
+      >[ no stats configured ]</p>
     {/if}
   </div>
 
   <!-- ── footer ── -->
   <div
     class="flex items-center justify-between px-3 py-1.5"
-    style="background: #09090f; border-top: 1px solid {palette.border}22;"
+    style="background:#07070d; border-top:1px solid {palette.border}18;"
   >
     <span
-      class="font-[var(--font-ui)] uppercase"
-      style="font-size: 7px; letter-spacing: 0.15em; color: {palette.border}; opacity: 0.5;"
+      class="font-[var(--font-body)] uppercase"
+      style="font-size: 7px; letter-spacing: 0.18em; color: {palette.border}; opacity: 0.45;"
     >forge · demo</span>
-    <span
-      class="font-[var(--font-body)]"
-      style="font-size: 7px; color: {palette.accent}; opacity: 0.4;"
-    >◆</span>
+    <div style="display:flex; align-items:center; gap:3px;">
+      <span style="width:3px; height:3px; border-radius:50%; background:{palette.accent}; opacity:0.5; display:inline-block;"></span>
+      <span style="width:3px; height:3px; border-radius:50%; background:{palette.accent}; opacity:0.3; display:inline-block;"></span>
+      <span style="width:3px; height:3px; border-radius:50%; background:{palette.accent}; opacity:0.15; display:inline-block;"></span>
+    </div>
   </div>
+
+  <!-- bottom neon edge bar -->
+  <div style="
+    height:1.5px;
+    background:linear-gradient(90deg, transparent, {palette.border}66, transparent);
+    opacity:0.5;
+  "></div>
 
 </div>
