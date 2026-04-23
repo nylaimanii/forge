@@ -473,50 +473,153 @@
 
   <!-- ── data cards overlay ── -->
   {#each placedCards as card (card.id)}
+    {@const cardIndex = placedCards.indexOf(card) + 1}
     <div
       data-card
-      class="absolute rounded-xl overflow-hidden select-none"
+      class="absolute select-none"
       style="
         left:{card.x}px;
         top:{card.y}px;
-        width:200px;
+        width:220px;
         z-index:10;
-        background:var(--color-surface-1);
-        border:1.5px solid {accentColor}44;
-        box-shadow:0 4px 24px rgba(0,0,0,0.5), 0 0 0 1px {accentColor}18;
         cursor:{draggingCardId === card.id ? 'grabbing' : 'grab'};
+        border-radius:12px;
+        overflow:hidden;
+        border:1px solid {accentColor}55;
+        box-shadow:
+          0 0 0 1px {accentColor}18,
+          0 0 16px {accentColor}25,
+          0 8px 32px rgba(0,0,0,0.7),
+          inset 0 1px 0 rgba(255,255,255,0.05);
+        background: linear-gradient(160deg, #0d0d18 0%, #0a0a12 100%);
       "
       onpointerdown={(e: PointerEvent) => startCardDrag(e, card.id)}
       onpointermove={onCardPointerMove}
       onpointerup={stopCardDrag}
     >
-      <!-- card header -->
-      <div
-        class="flex items-center justify-between px-3 py-2"
-        style="background:{accentColor}18; border-bottom:1px solid {accentColor}30;"
-      >
-        <span
-          class="text-[10px] font-[var(--font-ui)] font-semibold uppercase tracking-wider truncate"
-          style="color:{accentColor};"
-        >{card.tableName}</span>
+
+      <!-- animated top glow bar -->
+      <div style="
+        height:2px;
+        background:linear-gradient(90deg, transparent 0%, {accentColor} 40%, {accentColor}cc 60%, transparent 100%);
+        opacity:0.9;
+      "></div>
+
+      <!-- header -->
+      <div style="
+        padding:8px 12px 7px;
+        background:linear-gradient(180deg, {accentColor}14 0%, transparent 100%);
+        border-bottom:1px solid {accentColor}28;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:8px;
+      ">
+        <!-- left: table name + card number -->
+        <div style="display:flex; align-items:center; gap:6px; min-width:0;">
+          <span style="
+            width:5px; height:5px; border-radius:50%;
+            background:{accentColor};
+            box-shadow:0 0 6px {accentColor};
+            flex-shrink:0;
+            display:inline-block;
+          "></span>
+          <span style="
+            font-family:var(--font-body);
+            font-size:10px;
+            font-weight:700;
+            letter-spacing:0.12em;
+            color:{accentColor};
+            text-transform:uppercase;
+            overflow:hidden;
+            text-overflow:ellipsis;
+            white-space:nowrap;
+          ">{card.tableName}</span>
+          <span style="
+            font-family:var(--font-body);
+            font-size:8px;
+            color:{accentColor}66;
+            letter-spacing:0.05em;
+            flex-shrink:0;
+          ">#{String(cardIndex).padStart(2,'0')}</span>
+        </div>
+
+        <!-- dismiss button -->
         <button
           onclick={(e) => { e.stopPropagation(); removeCard(card.id); }}
-          class="flex items-center justify-center w-4 h-4 rounded-full text-[9px] transition-all shrink-0 ml-2"
-          style="background:rgba(248,113,113,0.15); color:#f87171; border:1px solid rgba(248,113,113,0.3);"
-          title="Remove card"
           onpointerdown={(e: PointerEvent) => e.stopPropagation()}
+          style="
+            width:18px; height:18px; border-radius:4px; flex-shrink:0;
+            background:rgba(248,113,113,0.12);
+            border:1px solid rgba(248,113,113,0.35);
+            color:#f87171;
+            font-size:9px;
+            display:flex; align-items:center; justify-content:center;
+            cursor:pointer;
+            transition:background 0.15s, border-color 0.15s;
+            font-family:var(--font-ui);
+            line-height:1;
+          "
+          title="Remove"
         >✕</button>
       </div>
 
-      <!-- card fields -->
-      <div class="flex flex-col py-1.5">
-        {#each Object.entries(card.row).slice(0, 6) as [key, val]}
-          <div class="flex items-center justify-between px-3 py-1 gap-2 hover:bg-white/[0.025] transition-colors">
-            <span class="text-[9px] font-[var(--font-ui)] uppercase tracking-wider shrink-0" style="color:var(--color-muted);">{key}</span>
-            <span class="text-[10px] font-[var(--font-body)] truncate text-right" style="color:var(--color-text); max-width:100px;">{fmtVal(val)}</span>
+      <!-- scanline overlay (decorative) -->
+      <div style="
+        position:absolute; inset:0; pointer-events:none; z-index:1;
+        background:repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 3px,
+          rgba(0,0,0,0.08) 3px,
+          rgba(0,0,0,0.08) 4px
+        );
+        border-radius:12px;
+      "></div>
+
+      <!-- data rows -->
+      <div style="padding:6px 0 8px; position:relative; z-index:2;">
+        {#each Object.entries(card.row).slice(0, 6) as [key, val], rowI}
+          <div style="
+            display:flex;
+            align-items:baseline;
+            justify-content:space-between;
+            padding:4px 12px;
+            gap:8px;
+            background:{rowI % 2 === 0 ? 'rgba(255,255,255,0.012)' : 'transparent'};
+            border-left:2px solid {rowI === 0 ? accentColor + '60' : 'transparent'};
+          ">
+            <span style="
+              font-family:var(--font-body);
+              font-size:8.5px;
+              letter-spacing:0.1em;
+              text-transform:uppercase;
+              color:{accentColor}70;
+              flex-shrink:0;
+              white-space:nowrap;
+            ">{key}</span>
+            <span style="
+              font-family:var(--font-body);
+              font-size:11px;
+              color:#e2e8f0;
+              text-align:right;
+              overflow:hidden;
+              text-overflow:ellipsis;
+              white-space:nowrap;
+              max-width:110px;
+              letter-spacing:0.02em;
+            ">{fmtVal(val)}</span>
           </div>
         {/each}
       </div>
+
+      <!-- bottom shimmer strip -->
+      <div style="
+        height:1px;
+        background:linear-gradient(90deg, transparent, {accentColor}40, transparent);
+        opacity:0.6;
+      "></div>
+
     </div>
   {/each}
 
