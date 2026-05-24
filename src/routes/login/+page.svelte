@@ -1,31 +1,31 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { createBrowserSupabase } from '$lib/supabase';
-	import { showToast } from '$lib/stores/toasts';
 	import Toast from '$components/ui/Toast.svelte';
 
 	let email    = $state('');
 	let password = $state('');
 	let loading  = $state(false);
+	let errorMsg = $state('');
 
 	async function handleLogin(e: SubmitEvent) {
 		e.preventDefault();
-		loading = true;
+		loading  = true;
+		errorMsg = '';
 
 		try {
 			const supabase = createBrowserSupabase();
 			const { error } = await supabase.auth.signInWithPassword({ email, password });
 
-			loading = false;
-
 			if (error) {
-				showToast(error.message || 'Login failed. Check your credentials.', 'error');
+				errorMsg = 'incorrect email or password — try again';
 			} else {
 				goto('/dashboard');
 			}
 		} catch {
+			errorMsg = "can't connect right now — try again in a moment";
+		} finally {
 			loading = false;
-			showToast("can't connect to the server right now — if this keeps happening, try again in a minute.", 'error');
 		}
 	}
 </script>
@@ -125,10 +125,24 @@
 					disabled={loading}
 					class="w-full h-12 rounded-lg bg-[var(--color-accent)] text-[#05050a] font-[var(--font-display)] font-semibold text-sm
 						hover:bg-white hover:shadow-lg transition-all duration-150
-						disabled:opacity-40 disabled:pointer-events-none mt-2"
+						disabled:opacity-40 disabled:pointer-events-none mt-2 flex items-center justify-center gap-2"
 				>
-					{loading ? 'logging in...' : 'log in'}
+					{#if loading}
+						<svg class="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+							<circle cx="12" cy="12" r="10" stroke-opacity=".25"/>
+							<path d="M12 2a10 10 0 0 1 10 10"/>
+						</svg>
+						signing in...
+					{:else}
+						log in
+					{/if}
 				</button>
+
+				{#if errorMsg}
+					<div class="p-3 rounded-lg bg-[var(--color-danger-glow)] border border-[var(--color-danger)]/30">
+						<p class="text-xs text-[var(--color-danger)] font-[var(--font-body)]">{errorMsg}</p>
+					</div>
+				{/if}
 			</form>
 
 			<p class="mt-6 text-center text-sm text-[var(--color-muted)] font-[var(--font-ui)]">

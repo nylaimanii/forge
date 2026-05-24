@@ -3,6 +3,7 @@
 	import { onMount, onDestroy } from 'svelte';
 	import { Sparkles, Info, Copy, Check } from 'lucide-svelte';
 	import { showToast } from '$lib/stores/toasts';
+	import { demoData } from '$lib/stores/demo';
 
 	// ── per-project example questions ─────────────────────────────────────────────
 	const EXAMPLE_QUESTIONS: Record<string, string[]> = {
@@ -45,6 +46,7 @@
 	];
 
 	let projectId = $derived(page.params.id ?? '');
+	let projectTables = $derived($demoData.tables.filter((t) => t.projectId === projectId));
 	let exampleQuestions = $derived(EXAMPLE_QUESTIONS[projectId] ?? FALLBACK_QUESTIONS);
 	let exampleIndex = $state(0);
 	let exampleVisible = $state(true);
@@ -69,11 +71,12 @@
 		question = q;
 	}
 
-	// hardcoded demo schema context
-	const SCHEMA_CONTEXT = [
-		'TABLE pokemon (id INTEGER, name TEXT, type TEXT, hp INTEGER, attack INTEGER, defense INTEGER)',
-		'TABLE trainers (id INTEGER, name TEXT, region TEXT, badge_count INTEGER)',
-	].join('\n');
+	// schema context derived from the current project's actual tables
+	let SCHEMA_CONTEXT = $derived(
+		projectTables.length > 0
+			? projectTables.map((t) => `${t.name}(${t.fields.map((f) => f.name).join(', ')})`).join('\n')
+			: 'no tables found'
+	);
 
 	type Mode = 'query' | 'schema';
 	let mode = $state<Mode>('query');
