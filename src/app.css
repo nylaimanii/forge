@@ -153,20 +153,18 @@ section, .section-inner {
   box-shadow: 0 0 20px var(--color-danger-glow);
 }
 
-/* staggered fade-up animation */
+/* staggered fade-up animation — opacity only.
+   keeping transform here would promote elements to GPU compositing
+   layers and (with fill-mode `both`) swallow canvas paint calls from
+   sibling subtrees like monaco / tldraw. fill-mode `backwards` applies
+   the from-state only before the animation, never after. */
 @keyframes fade-up {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 .animate-fade-up {
-  animation: fade-up 0.4s var(--ease-forge) both;
+  animation: fade-up 0.4s var(--ease-forge) backwards;
 }
 
 .animate-fade-up-1 { animation-delay: 0ms; }

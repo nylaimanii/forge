@@ -204,7 +204,7 @@
 					no tables yet
 				</p>
 			{:else}
-				{#each data.tables as table, i (table.id)}
+				{#each data.tables as table (table.id)}
 					<button
 						type="button"
 						onclick={() => loadSQL(`SELECT * FROM ${table.name} LIMIT 50;`)}
@@ -212,9 +212,7 @@
 							flex items-center gap-2 w-full px-4 py-2 text-left text-xs
 							text-[var(--color-muted)] hover:text-[var(--color-text)]
 							hover:bg-white/5 transition-colors font-[var(--font-body)]
-							animate-fade-up
 						"
-						style="animation-delay: {i * 30}ms"
 					>
 						<Table size={11} class="shrink-0 text-[var(--color-accent)]" />
 						{table.name}
@@ -236,16 +234,15 @@
 					no queries yet
 				</p>
 			{:else}
-				{#each localHistory as item, i (item.id)}
+				{#each localHistory as item (item.id)}
 					<button
 						type="button"
 						onclick={() => loadSQL(item.sql)}
 						class="
 							flex flex-col gap-0.5 w-full px-4 py-2 text-left
 							hover:bg-white/5 transition-colors border-b border-[var(--color-border)]/40
-							animate-fade-up group/hist
+							group/hist
 						"
-						style="animation-delay: {i * 20}ms"
 					>
 						<span class="text-xs text-[var(--color-text)] font-[var(--font-body)] truncate group-hover/hist:text-[var(--color-accent)] transition-colors">
 							{item.sql.slice(0, 60)}{item.sql.length > 60 ? '…' : ''}
