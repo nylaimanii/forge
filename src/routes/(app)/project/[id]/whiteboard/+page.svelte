@@ -281,8 +281,13 @@
 		</div>
 	</div>
 
-	<!-- tldraw canvas container — React mounts here -->
-	<div bind:this={canvasContainer} class="w-full h-full"></div>
+	<!--
+		tldraw canvas container — React mounts here.
+		intentionally a plain static node: NO reactive class/style bindings,
+		positioned absolute so the floating toolbar's text changes (saved ↔
+		unsaved changes) can never trigger a reflow that wipes the canvas.
+	-->
+	<div bind:this={canvasContainer} style="position:absolute; inset:0;"></div>
 </div>
 
 <!-- data card picker modal -->
