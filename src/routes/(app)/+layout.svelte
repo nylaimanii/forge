@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { fade } from 'svelte/transition';
 	import { onMount } from 'svelte';
 	import type { LayoutData } from './$types';
 	import Sidebar from '$components/layout/Sidebar.svelte';
@@ -48,12 +47,17 @@
 <!-- breadcrumbs are fed from nested layouts via the store -->
 <TopBar breadcrumbs={$breadcrumbs} onCommandPalette={() => (paletteOpen = true)} />
 
+<!--
+	NOTE: do NOT wrap {@render children()} in {#key data} or an opacity
+	transition. data invalidates after every form action (?/saveWhiteboard,
+	?/saveQuery, etc.), so {#key data} would tear down monaco / tldraw on
+	every autosave, and an opacity transition creates a compositing layer
+	that swallows canvas paint calls.
+-->
 <main class="ml-16 mt-14 min-h-[calc(100vh-3.5rem)] overflow-auto bg-[var(--color-bg)]">
-	{#key data}
-		<div class="h-full" in:fade={{ duration: 150, delay: 50 }} out:fade={{ duration: 100 }}>
-			{@render children()}
-		</div>
-	{/key}
+	<div class="h-full">
+		{@render children()}
+	</div>
 </main>
 
 <CommandPalette bind:open={paletteOpen} onclose={() => (paletteOpen = false)} />

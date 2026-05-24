@@ -186,7 +186,7 @@
 	and fill height ourselves.
 -->
 <div
-	class="flex overflow-hidden -mt-12"
+	class="flex overflow-clip -mt-12"
 	style="height: calc(100vh - 6.5rem);"
 >
 	<!-- ── LEFT PANEL: tables + history ──────────────────────────────────── -->
@@ -260,11 +260,11 @@
 	</aside>
 
 	<!-- ── CENTER PANEL: editor + toolbar + results ───────────────────────── -->
-	<div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+	<div class="flex-1 flex flex-col min-w-0 overflow-clip">
 
 		<!-- Monaco editor (~55% of panel height) -->
-		<div class="shrink-0" style="height: 55%;">
-			<div bind:this={editorContainer} class="w-full h-full"></div>
+		<div class="shrink-0" style="height: 55%; isolation: auto; transform: none; will-change: auto;">
+			<div bind:this={editorContainer} class="w-full h-full" style="position:relative; z-index:0;"></div>
 		</div>
 
 		<!-- toolbar bar (40px) -->

@@ -276,7 +276,7 @@
 <!--
 	Full remaining viewport. -mt-12 escapes the pt-12 from the project layout.
 -->
-<div class="relative -mt-12" style="height: calc(100vh - 6.5rem); overflow: hidden;">
+<div class="relative -mt-12" style="height: calc(100vh - 6.5rem); overflow: clip;">
 
 	<!-- floating toolbar -->
 	<div class="absolute top-3 left-3 z-10 flex items-center gap-2 glass border border-[var(--color-border)] rounded-xl px-3 py-2">
@@ -306,8 +306,10 @@
 		intentionally a plain static node: NO reactive class/style bindings,
 		positioned absolute so the floating toolbar's text changes (saved ↔
 		unsaved changes) can never trigger a reflow that wipes the canvas.
+		isolation:auto + z-index:0 keep tldraw on its own simple stacking
+		context so an ancestor compositing layer can't swallow paint calls.
 	-->
-	<div bind:this={canvasContainer} style="position:absolute; inset:0;"></div>
+	<div bind:this={canvasContainer} style="position:absolute; inset:0; isolation:auto; z-index:0;"></div>
 </div>
 
 <!-- data card picker modal -->
