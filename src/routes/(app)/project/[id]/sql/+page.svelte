@@ -63,6 +63,11 @@
 			2048 | 3, // CtrlCmd = 2048, Enter = 3
 			() => runQuery(),
 		);
+
+		// force a repaint once the container has settled — monaco occasionally
+		// mounts before its container has its final dimensions and ends up with
+		// an invisible (un-painted) viewport until something resizes the window.
+		setTimeout(() => editor?.layout(), 50);
 	});
 
 	onDestroy(() => {

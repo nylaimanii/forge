@@ -17,6 +17,7 @@
 	let editor: any = null;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	let reactRoot: any = null;
+	let unsubscribeStore: (() => void) | null = null;
 
 	// ── save state ────────────────────────────────────────────────────────────
 	let unsaved   = $state(false);
@@ -211,9 +212,12 @@
 				}
 			}
 
-			// listen for changes from user actions only
-			ed.store.listen(
-				() => { markUnsaved(); },
+			// listen for changes from user actions only.
+			// defer markUnsaved via queueMicrotask so the svelte $state mutation
+			// doesn't run inside tldraw's react render/notify cycle (was crashing
+			// the canvas on every interaction).
+			unsubscribeStore = ed.store.listen(
+				() => { queueMicrotask(() => markUnsaved()); },
 				{ source: 'user', scope: 'document' }
 			);
 		};
@@ -236,6 +240,9 @@
 		if (saveTimer) clearTimeout(saveTimer);
 		// attempt sync save before unmount
 		if (unsaved && editor) doSave();
+		// release tldraw store listener so it doesn't fire after unmount
+		unsubscribeStore?.();
+		unsubscribeStore = null;
 		// unmount React tree
 		setTimeout(() => reactRoot?.unmount(), 0);
 	});

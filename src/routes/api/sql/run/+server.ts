@@ -28,7 +28,10 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		return json({ error: 'only SELECT statements are allowed via the SQL editor' }, { status: 400 });
 	}
 
-	const { data, error } = await locals.supabase.rpc('execute_sql', { query: sql });
+	// strip trailing semicolons — supabase's execute_sql RPC chokes on them
+	const cleanSql = sql.replace(/;+$/, '').trim();
+
+	const { data, error } = await locals.supabase.rpc('execute_sql', { query: cleanSql });
 
 	if (error) {
 		return json({ error: error.message }, { status: 400 });

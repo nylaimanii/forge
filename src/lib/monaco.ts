@@ -19,7 +19,7 @@ export async function initMonaco(container: HTMLElement, options: object) {
 				{ token: 'number',   foreground: 'ffb84d' },
 			],
 			colors: {
-				'editor.background':             '#0f0f1a',
+				'editor.background':             '#0d0d14',
 				'editor.foreground':             '#f0f0ff',
 				'editorLineNumber.foreground':   '#6b6b8a',
 				'editor.selectionBackground':    '#6c63ff30',
