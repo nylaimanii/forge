@@ -1,9 +1,12 @@
 import loader from '@monaco-editor/loader';
 
 let initialized = false;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let monacoInstance: any = null;
 
 export async function initMonaco(container: HTMLElement, options: object) {
 	const monaco = await loader.init();
+	monacoInstance = monaco;
 
 	if (!initialized) {
 		initialized = true;
@@ -30,4 +33,10 @@ export async function initMonaco(container: HTMLElement, options: object) {
 	}
 
 	return monaco.editor.create(container, { theme: 'forge-dark', ...options });
+}
+
+// re-apply a named theme to all live editors. used to recover from
+// theme flips that monaco occasionally performs after a layout shift.
+export function setMonacoTheme(name: string) {
+	monacoInstance?.editor.setTheme(name);
 }

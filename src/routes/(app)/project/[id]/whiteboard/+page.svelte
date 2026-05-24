@@ -18,6 +18,7 @@
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	let reactRoot: any = null;
 	let unsubscribeStore: (() => void) | null = null;
+	let ro: ResizeObserver | null = null;
 
 	// ── save state ────────────────────────────────────────────────────────────
 	let unsaved   = $state(false);
@@ -212,12 +213,28 @@
 				}
 			}
 
+			// observe the container — tldraw loses its viewport bounds after
+			// any sibling layout shift; nudging a window resize re-runs its
+			// internal layout and keeps the canvas painting.
+			if (canvasContainer) {
+				ro = new ResizeObserver(() => {
+					window.dispatchEvent(new Event('resize'));
+				});
+				ro.observe(canvasContainer);
+			}
+
 			// listen for changes from user actions only.
 			// defer markUnsaved via queueMicrotask so the svelte $state mutation
 			// doesn't run inside tldraw's react render/notify cycle (was crashing
-			// the canvas on every interaction).
+			// the canvas on every interaction). also dispatch a resize so tldraw
+			// recovers its viewport after toolbar-induced state changes.
 			unsubscribeStore = ed.store.listen(
-				() => { queueMicrotask(() => markUnsaved()); },
+				() => {
+					queueMicrotask(() => {
+						markUnsaved();
+						window.dispatchEvent(new Event('resize'));
+					});
+				},
 				{ source: 'user', scope: 'document' }
 			);
 		};
@@ -243,6 +260,9 @@
 		// release tldraw store listener so it doesn't fire after unmount
 		unsubscribeStore?.();
 		unsubscribeStore = null;
+		// stop observing the container
+		ro?.disconnect();
+		ro = null;
 		// unmount React tree
 		setTimeout(() => reactRoot?.unmount(), 0);
 	});

@@ -7,7 +7,7 @@
 	import EmptyState from '$components/ui/EmptyState.svelte';
 	import { showToast } from '$lib/stores/toasts';
 	import { relativeTime } from '$lib/utils';
-	import { initMonaco } from '$lib/monaco';
+	import { initMonaco, setMonacoTheme } from '$lib/monaco';
 
 	let { data }: { data: PageData } = $props();
 
@@ -98,8 +98,12 @@
 			status   = 'error';
 			errorMsg = payload.error ?? 'unknown error';
 			// results panel just expanded with an error block — force monaco
-			// to recalc its viewport so the editor doesn't go black.
-			setTimeout(() => editor?.layout(), 100);
+			// to recalc its viewport AND re-apply the theme (it occasionally
+			// flips back to vs-dark after a layout shift).
+			setTimeout(() => {
+				editor?.layout();
+				setMonacoTheme('forge-dark');
+			}, 100);
 			return;
 		}
 
@@ -110,7 +114,10 @@
 		status   = 'done';
 
 		// results panel just expanded with the table — same as above.
-		setTimeout(() => editor?.layout(), 100);
+		setTimeout(() => {
+			editor?.layout();
+			setMonacoTheme('forge-dark');
+		}, 100);
 
 		// fire-and-forget save to history
 		const body = new URLSearchParams({ sql, source: 'manual' });
