@@ -12,15 +12,20 @@
 		e.preventDefault();
 		loading = true;
 
-		const supabase = createBrowserSupabase();
-		const { error } = await supabase.auth.signInWithPassword({ email, password });
+		try {
+			const supabase = createBrowserSupabase();
+			const { error } = await supabase.auth.signInWithPassword({ email, password });
 
-		loading = false;
+			loading = false;
 
-		if (error) {
-			showToast(error.message || 'Login failed. Check your credentials.', 'error');
-		} else {
-			goto('/dashboard');
+			if (error) {
+				showToast(error.message || 'Login failed. Check your credentials.', 'error');
+			} else {
+				goto('/dashboard');
+			}
+		} catch {
+			loading = false;
+			showToast("can't connect to the server right now — if this keeps happening, try again in a minute.", 'error');
 		}
 	}
 </script>

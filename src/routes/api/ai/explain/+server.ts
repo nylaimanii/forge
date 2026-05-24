@@ -3,7 +3,8 @@ import type { RequestHandler } from './$types';
 import { explainQuery } from '$lib/ai';
 
 export const POST: RequestHandler = async ({ request, locals }) => {
-	if (!locals.session) {
+	const isDemo = request.headers.get('x-demo-mode') === 'true';
+	if (!locals.session && !isDemo) {
 		return json({ error: 'unauthorized' }, { status: 401 });
 	}
 

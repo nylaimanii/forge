@@ -97,7 +97,7 @@
 
 		const res = await fetch('/api/ai/generate-query', {
 			method:  'POST',
-			headers: { 'Content-Type': 'application/json' },
+			headers: { 'Content-Type': 'application/json', 'x-demo-mode': 'true' },
 			body:    JSON.stringify({ question, schema: SCHEMA_CONTEXT }),
 		});
 		const payload = await res.json();
@@ -118,7 +118,7 @@
 
 		const res = await fetch('/api/ai/explain', {
 			method:  'POST',
-			headers: { 'Content-Type': 'application/json' },
+			headers: { 'Content-Type': 'application/json', 'x-demo-mode': 'true' },
 			body:    JSON.stringify({ sql: generatedSQL }),
 		});
 		const payload = await res.json();
@@ -152,7 +152,7 @@
 
 		const res = await fetch('/api/ai/generate-schema', {
 			method:  'POST',
-			headers: { 'Content-Type': 'application/json' },
+			headers: { 'Content-Type': 'application/json', 'x-demo-mode': 'true' },
 			body:    JSON.stringify({ description: schemaDesc }),
 		});
 		const payload = await res.json();
