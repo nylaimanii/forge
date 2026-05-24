@@ -18,7 +18,7 @@
 			});
 
 			if (error) {
-				errorMsg = error.message || 'could not send reset link — try again';
+				errorMsg = "can't connect right now — try again in a moment";
 			} else {
 				sent = true;
 			}
