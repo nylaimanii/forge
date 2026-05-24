@@ -16,20 +16,29 @@ export async function initMonaco(container: HTMLElement, options: object) {
 			base: 'vs-dark',
 			inherit: true,
 			rules: [
-				{ token: 'keyword',  foreground: '6c63ff', fontStyle: 'bold' },
-				{ token: 'string',   foreground: '00f5d4' },
-				{ token: 'comment',  foreground: '6b6b8a', fontStyle: 'italic' },
-				{ token: 'number',   foreground: 'ffb84d' },
+				// rule foregrounds: NO `#` prefix
+				{ token: '',           foreground: 'e2e8f0' },
+				{ token: 'keyword',    foreground: '4f8ef7', fontStyle: 'bold' },
+				{ token: 'string',     foreground: 'a78bfa' },
+				{ token: 'number',     foreground: 'fb7185' },
+				{ token: 'comment',    foreground: '4f8ef755', fontStyle: 'italic' },
+				{ token: 'operator',   foreground: '38bdf8' },
+				{ token: 'identifier', foreground: 'e2e8f0' },
 			],
 			colors: {
-				'editor.background':             '#0d0d14',
-				'editor.foreground':             '#f0f0ff',
-				'editorLineNumber.foreground':   '#6b6b8a',
-				'editor.selectionBackground':    '#6c63ff30',
-				'editorCursor.foreground':       '#6c63ff',
-				'editor.lineHighlightBackground':'#ffffff05',
+				// colors values: DO have `#` prefix
+				'editor.foreground':                '#e2e8f0',
+				'editor.background':                '#0d0d14',
+				'editorCursor.foreground':          '#4f8ef7',
+				'editor.selectionBackground':       '#4f8ef722',
+				'editor.lineHighlightBackground':   '#ffffff08',
+				'editorLineNumber.foreground':      '#4f8ef755',
+				'editorLineNumber.activeForeground':'#4f8ef7',
 			},
 		});
+
+		// activate forge-dark as the default theme for all editor instances
+		monaco.editor.setTheme('forge-dark');
 	}
 
 	return monaco.editor.create(container, { theme: 'forge-dark', ...options });
