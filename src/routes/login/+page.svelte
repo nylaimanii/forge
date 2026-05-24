@@ -105,7 +105,10 @@
 
 				<!-- password -->
 				<div class="flex flex-col gap-1.5">
-					<label class="font-[var(--font-ui)] text-xs font-medium text-[var(--color-muted)] uppercase tracking-wider">Password</label>
+					<div class="flex items-center justify-between">
+						<label class="font-[var(--font-ui)] text-xs font-medium text-[var(--color-muted)] uppercase tracking-wider">Password</label>
+						<a href="/forgot-password" class="font-[var(--font-ui)] text-[10px] text-[var(--color-muted)] hover:text-[var(--color-text)] transition-colors">forgot password?</a>
+					</div>
 					<input
 						type="password"
 						placeholder="••••••••"
