@@ -91,7 +91,7 @@
 					class="w-full text-left px-4 py-2.5 hover:bg-white/5 transition-colors"
 				>
 					<p class="text-xs text-[var(--color-text)] font-[var(--font-ui)] truncate mb-0.5">{item.question}</p>
-					<p class="text-[10px] text-[var(--color-muted)] font-[var(--font-body)] truncate">{item.sql}</p>
+					<p class="text-[10px] text-[var(--color-muted)] font-[var(--font-mono)] truncate">{item.sql}</p>
 				</button>
 			{/each}
 		</div>
@@ -143,7 +143,7 @@
 		<!-- results table -->
 		<div class="flex-1 overflow-auto">
 			{#if result}
-				<table class="w-full text-xs font-[var(--font-body)]">
+				<table class="w-full text-xs font-[var(--font-mono)]">
 					<thead class="sticky top-0 bg-[var(--color-surface-2)] border-b border-[var(--color-border)]">
 						<tr>
 							{#each cols as col}

@@ -143,7 +143,7 @@
       <div class="absolute top-2.5 left-2.5 flex items-center gap-1">
         <span style="width:4px; height:4px; border-radius:50%; background:{palette.accent}; box-shadow:0 0 5px {palette.accent}; display:inline-block;"></span>
         <span
-          class="font-[var(--font-body)] font-bold"
+          class="font-[var(--font-mono)] font-bold"
           style="font-size: 8px; color: {palette.accent}; letter-spacing: 0.12em; opacity: 0.9;"
         >#{cardNumber}</span>
       </div>
@@ -152,7 +152,7 @@
     <!-- type badge -->
     {#if typeValue}
       <span
-        class="absolute top-2.5 right-2.5 px-1.5 py-0.5 rounded font-[var(--font-body)] font-bold"
+        class="absolute top-2.5 right-2.5 px-1.5 py-0.5 rounded font-[var(--font-mono)] font-bold"
         style="font-size: 7px; background: {palette.accent}18; color: {palette.accent}; border: 1px solid {palette.accent}50; letter-spacing: 0.1em; text-transform:uppercase;"
       >{typeValue}</span>
     {/if}
@@ -223,7 +223,7 @@
     <!-- subtitle -->
     {#if subtitleVal}
       <p
-        class="w-full px-4 -mt-1 text-center font-[var(--font-body)] truncate"
+        class="w-full px-4 -mt-1 text-center font-[var(--font-mono)] truncate"
         style="font-size: 9px; color: {palette.accent}; opacity: 0.8; letter-spacing:0.06em; text-transform:uppercase;"
       >{subtitleVal}</p>
     {/if}
@@ -243,11 +243,11 @@
         <div class="flex flex-col gap-1">
           <div class="flex items-center justify-between">
             <span
-              class="font-[var(--font-body)] uppercase"
+              class="font-[var(--font-mono)] uppercase"
               style="font-size: 8px; letter-spacing: 0.1em; color: {palette.accent}; opacity: 0.65;"
             >{stat.label.slice(0, 12)}</span>
             <span
-              class="font-[var(--font-body)] font-bold"
+              class="font-[var(--font-mono)] font-bold"
               style="font-size: 11px; color: {palette.text}; text-shadow:0 0 8px {palette.accent}55;"
             >{fmtValue(stat.value)}</span>
           </div>
@@ -312,7 +312,7 @@
           border-bottom:1px solid {palette.border}12;
         ">
           <span style="
-            font-family:var(--font-body);
+            font-family:var(--font-mono);
             font-size:7.5px;
             letter-spacing:0.1em;
             text-transform:uppercase;
@@ -322,7 +322,7 @@
             padding-top:1px;
           ">{k}</span>
           <span style="
-            font-family:var(--font-body);
+            font-family:var(--font-mono);
             font-size:10px;
             color:#e2e8f0;
             text-align:right;

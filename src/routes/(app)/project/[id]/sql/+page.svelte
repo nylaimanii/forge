@@ -230,7 +230,7 @@
 						class="
 							flex items-center gap-2 w-full px-4 py-2 text-left text-xs
 							text-[var(--color-muted)] hover:text-[var(--color-text)]
-							hover:bg-white/5 transition-colors font-[var(--font-body)]
+							hover:bg-white/5 transition-colors font-[var(--font-mono)]
 						"
 					>
 						<Table size={11} class="shrink-0 text-[var(--color-accent)]" />
@@ -369,7 +369,7 @@
 					</EmptyState>
 				</div>
 			{:else}
-				<table class="w-full text-xs font-[var(--font-body)] border-collapse">
+				<table class="w-full text-xs font-[var(--font-mono)] border-collapse">
 					<thead>
 						<tr>
 							{#each columns as col}
@@ -453,10 +453,10 @@
 								<div class="pb-1 px-4">
 									{#each (table as any).fields ?? [] as field (field.id)}
 										<div class="flex items-center gap-2 py-1">
-											<span class="text-xs text-[var(--color-text)] font-[var(--font-body)] flex-1 truncate">
+											<span class="text-xs text-[var(--color-text)] font-[var(--font-mono)] flex-1 truncate">
 												{field.name}
 											</span>
-											<span class="text-[10px] text-[var(--color-muted)] font-[var(--font-body)] shrink-0">
+											<span class="text-[10px] text-[var(--color-muted)] font-[var(--font-mono)] shrink-0">
 												{field.type}
 											</span>
 										</div>
