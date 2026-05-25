@@ -134,6 +134,11 @@
 						{tableCount} {tableCount === 1 ? 'table' : 'tables'}
 					{/snippet}
 				</Badge>
+				{#if tableCount === 0}
+					<p style="font-size:10px; color:var(--color-muted); font-family:var(--font-ui); margin-top:4px;">
+						no tables yet — click to start building
+					</p>
+				{/if}
 			</div>
 
 			<p class="text-xs text-[var(--color-muted)] font-[var(--font-body)]">

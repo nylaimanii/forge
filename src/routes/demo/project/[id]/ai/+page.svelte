@@ -312,9 +312,20 @@
 							<p class="text-sm text-[var(--color-muted)] font-[var(--font-ui)] leading-relaxed">{explanation}</p>
 						</div>
 					{:else}
-						<div class="flex flex-col items-center justify-center h-40 text-center px-4">
-							<Info size={32} strokeWidth={1.25} class="text-[var(--color-muted)] opacity-40 mb-3" />
-							<p class="text-sm text-[var(--color-muted)] font-[var(--font-ui)]">click 'explain' to understand what your SQL does</p>
+						<div
+							style="
+								display:flex; flex-direction:column; align-items:center;
+								justify-content:center; height:100%; gap:12px;
+								opacity:0.4; text-align:center; padding:2rem;
+							"
+						>
+							<Info size={32} strokeWidth={1.25} />
+							<p style="font-family:var(--font-display); font-size:13px; color:var(--color-text); margin:0;">
+								no explanation yet
+							</p>
+							<p style="font-family:var(--font-ui); font-size:11px; color:var(--color-muted); margin:0; max-width:240px;">
+								run a query then click "explain" to understand what your SQL does
+							</p>
 						</div>
 					{/if}
 				</div>

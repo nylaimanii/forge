@@ -74,14 +74,7 @@
 		<span class="text-[var(--color-text)]">{project?.name ?? 'project'}</span>
 	</nav>
 
-	<a
-		href="/signup"
-		class="flex items-center h-8 px-3 rounded-lg bg-[var(--color-accent)] text-[#05050a]
-			font-[var(--font-display)] font-semibold text-xs
-			hover:bg-white hover:shadow-[0_0_20px_rgba(226,232,240,0.2)] transition-all duration-150"
-	>
-		sign up free →
-	</a>
+	<!-- sign-up CTA lives in DemoBanner.svelte (top strip) — don't duplicate here -->
 </header>
 
 <!--

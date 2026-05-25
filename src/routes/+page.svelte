@@ -11,6 +11,16 @@
 
 <div style="width:100%; overflow-x:hidden; background:#05050a;">
 
+<!-- ── top-right sign-in link (lets returning users skip the marketing) ─────── -->
+<a
+	href="/login"
+	style="position:fixed; top:18px; right:24px; z-index:60; display:inline-flex; align-items:center; height:32px; padding:0 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.10); color:var(--color-muted); font-family:var(--font-ui); font-size:12px; text-decoration:none; transition:all 0.15s; backdrop-filter:blur(8px); background:rgba(13,13,20,0.5);"
+	onmouseenter={(e) => { (e.currentTarget as HTMLAnchorElement).style.color = 'var(--color-text)'; (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(255,255,255,0.22)'; }}
+	onmouseleave={(e) => { (e.currentTarget as HTMLAnchorElement).style.color = 'var(--color-muted)'; (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(255,255,255,0.10)'; }}
+>
+	sign in
+</a>
+
 <!-- ── HERO ──────────────────────────────────────────────────────────────────── -->
 <section style="width:100%; min-height:100vh; padding:80px 0; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; overflow:hidden;">
 

@@ -4,7 +4,6 @@
 	import type { PageData } from './$types';
 	import { Sparkles, Info, Copy, Check, ExternalLink, Loader } from 'lucide-svelte';
 	import Button from '$components/ui/Button.svelte';
-	import EmptyState from '$components/ui/EmptyState.svelte';
 	import { showToast } from '$lib/stores/toasts';
 
 	let { data }: { data: PageData } = $props();
@@ -324,12 +323,21 @@
 							</p>
 						</div>
 					{:else}
-						<EmptyState
-							title="no explanation yet"
-							description="click 'explain last query' to understand what your SQL does"
+						<div
+							style="
+								display:flex; flex-direction:column; align-items:center;
+								justify-content:center; height:100%; gap:12px;
+								opacity:0.4; text-align:center; padding:2rem;
+							"
 						>
-							{#snippet icon()}<Info size={32} strokeWidth={1.25} />{/snippet}
-						</EmptyState>
+							<Info size={32} strokeWidth={1.25} />
+							<p style="font-family:var(--font-display); font-size:13px; color:var(--color-text); margin:0;">
+								no explanation yet
+							</p>
+							<p style="font-family:var(--font-ui); font-size:11px; color:var(--color-muted); margin:0; max-width:240px;">
+								run a query then click "explain" to understand what your SQL does
+							</p>
+						</div>
 					{/if}
 				</div>
 			</div>
