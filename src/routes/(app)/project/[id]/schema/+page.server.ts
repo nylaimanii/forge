@@ -33,16 +33,30 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 export const actions: Actions = {
 	// ── create a new table node ───────────────────────────────────────────────
 	createTable: async ({ params, request, locals }) => {
-		const form  = await request.formData();
-		const count = parseInt((form.get('count') as string) ?? '0', 10);
+		const form   = await request.formData();
+		const count  = parseInt((form.get('count') as string) ?? '0', 10);
+		const name   = (((form.get('name') as string) ?? 'new_table').trim()) || 'new_table';
 		const offset = count * 40;
+
+		// refuse duplicates within the same project so retries after a failed
+		// ddl sync don't accumulate ghost rows in schema_tables
+		const { data: existing } = await locals.supabase
+			.from('schema_tables')
+			.select('id')
+			.eq('project_id', params.id)
+			.eq('name', name)
+			.maybeSingle();
+
+		if (existing) {
+			return fail(400, { error: 'a table with that name already exists' });
+		}
 
 		const { data: table, error } = await locals.supabase
 			.from('schema_tables')
 			.insert({
 				project_id: params.id,
 				user_id:    locals.session!.user.id,
-				name:       'new_table',
+				name,
 				x:          80 + offset,
 				y:          80 + offset,
 			})

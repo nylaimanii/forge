@@ -174,6 +174,22 @@
 		tables = tables.map((t) => t.id === tableId ? { ...t, name: clean } : t);
 
 		const supabase = createBrowserSupabase();
+
+		// refuse if another table in this project already has the new name
+		const { data: existing } = await supabase
+			.from('schema_tables')
+			.select('id')
+			.eq('project_id', projectId)
+			.neq('id', tableId)
+			.eq('name', clean)
+			.maybeSingle();
+
+		if (existing) {
+			showToast('a table with that name already exists', 'error');
+			tables = tables.map((t) => t.id === tableId ? { ...t, name: oldName } : t);
+			return;
+		}
+
 		const { error } = await supabase
 			.from('schema_tables')
 			.update({ name: clean })
@@ -254,10 +270,21 @@
 
 	async function handleCreateTable() {
 		creating = true;
+
+		// generate a unique default name so the server's uniqueness check
+		// never refuses the first attempt after a previous table was added
+		const baseName      = 'new_table';
+		const existingNames = new Set(tables.map((t) => t.name));
+		let name = baseName;
+		let i    = 1;
+		while (existingNames.has(name)) {
+			name = `${baseName}_${i++}`;
+		}
+
 		const res    = await fetch('?/createTable', {
 			method:  'POST',
 			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-			body:    new URLSearchParams({ count: String(tables.length) }),
+			body:    new URLSearchParams({ count: String(tables.length), name }),
 		});
 		const result = deserialize(await res.text());
 		creating = false;
