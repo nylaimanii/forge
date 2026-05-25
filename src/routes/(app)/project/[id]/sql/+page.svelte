@@ -186,8 +186,8 @@
 	and fill height ourselves.
 -->
 <div
-	class="flex overflow-clip -mt-12"
-	style="height: calc(100vh - 6.5rem);"
+	class="flex overflow-clip"
+	style="height: calc(100vh - 9rem);"
 >
 	<!-- ── LEFT PANEL: tables + history ──────────────────────────────────── -->
 	<aside class="w-[260px] shrink-0 flex flex-col border-r border-[var(--color-border)] bg-[var(--color-surface-1)] overflow-hidden">
