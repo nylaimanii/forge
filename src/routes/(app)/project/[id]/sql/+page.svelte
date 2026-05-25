@@ -260,11 +260,11 @@
 							onclick={() => loadSQL(item.sql)}
 							class="w-full text-left px-4 py-2.5 pr-8 hover:bg-white/5 transition-colors"
 						>
-							<p class="text-xs font-[var(--font-ui)] text-[var(--color-text)] truncate">
-								{(item as { question?: string }).question ?? 'query'}
+							<p class="text-xs font-[var(--font-ui)] text-[var(--color-text)] truncate group-hover/hist:text-[var(--color-accent)] transition-colors">
+								{item.sql.length > 40 ? item.sql.slice(0, 40) + '…' : item.sql}
 							</p>
 							<p class="text-[10px] font-[var(--font-body)] text-[var(--color-muted)] truncate mt-0.5">
-								{item.sql}
+								{relativeTime(item.ran_at)}
 							</p>
 						</button>
 						<button
