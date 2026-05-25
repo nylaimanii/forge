@@ -32,10 +32,14 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		return json({ error: 'only INSERT, UPDATE, DELETE, CREATE, ALTER allowed via this endpoint' }, { status: 400 });
 	}
 
-	// DDL: execute_ddl returns void — no result rows
+	// DDL: execute_ddl returns void — no result rows.
+	// schema('public') is explicit so postgrest hits the right rpc namespace.
 	if (DDL.has(firstWord)) {
-		const { error } = await locals.supabase.rpc('execute_ddl', { sql });
-		if (error) return json({ error: error.message }, { status: 400 });
+		const { error } = await locals.supabase.schema('public').rpc('execute_ddl', { sql });
+		if (error) {
+			console.error('execute_ddl error:', JSON.stringify(error));
+			return json({ error: error.message, details: error }, { status: 400 });
+		}
 		return json({ rows: [] });
 	}
 
