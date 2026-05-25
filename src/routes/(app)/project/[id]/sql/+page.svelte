@@ -8,6 +8,7 @@
 	import { showToast } from '$lib/stores/toasts';
 	import { relativeTime } from '$lib/utils';
 	import { initMonaco, setMonacoTheme } from '$lib/monaco';
+	import { createBrowserSupabase } from '$lib/supabase';
 
 	let { data }: { data: PageData } = $props();
 
@@ -25,6 +26,24 @@
 	// history updated locally when we save (initialized once from server data)
 	let localHistory = $state<typeof data.history>([]);
 	$effect(() => { localHistory = [...data.history]; });
+
+	// display-only dedup: collapse consecutive identical sql so the user
+	// doesn't see the same query 10x in a row after hammering "run".
+	// the DB rows stay untouched.
+	let displayHistory = $derived(
+		localHistory.filter((item, i) => i === 0 || item.sql !== localHistory[i - 1].sql),
+	);
+
+	async function deleteHistory(id: string) {
+		const prev   = localHistory;
+		localHistory = localHistory.filter((h) => h.id !== id);
+		const supabase = createBrowserSupabase();
+		const { error } = await supabase.from('query_history').delete().eq('id', id);
+		if (error) {
+			localHistory = prev;
+			showToast('failed to delete query', 'error');
+		}
+	}
 
 	// expandable tables in schema reference panel
 	let expanded = $state<Record<string, boolean>>({});
@@ -229,28 +248,47 @@
 		</div>
 
 		<div class="flex-1 overflow-y-auto">
-			{#if localHistory.length === 0}
+			{#if displayHistory.length === 0}
 				<p class="px-4 py-2 text-xs text-[var(--color-muted)] font-[var(--font-ui)] italic">
 					no queries yet
 				</p>
 			{:else}
-				{#each localHistory as item (item.id)}
-					<button
-						type="button"
-						onclick={() => loadSQL(item.sql)}
+				{#each displayHistory as item (item.id)}
+					<div
 						class="
-							flex flex-col gap-0.5 w-full px-4 py-2 text-left
+							group/hist relative flex items-center gap-1
 							hover:bg-white/5 transition-colors border-b border-[var(--color-border)]/40
-							group/hist
 						"
 					>
-						<span class="text-xs text-[var(--color-text)] font-[var(--font-body)] truncate group-hover/hist:text-[var(--color-accent)] transition-colors">
-							{item.sql.slice(0, 60)}{item.sql.length > 60 ? '…' : ''}
-						</span>
-						<span class="text-[10px] text-[var(--color-muted)] font-[var(--font-ui)]">
-							{relativeTime(item.ran_at)}
-						</span>
-					</button>
+						<button
+							type="button"
+							onclick={() => loadSQL(item.sql)}
+							class="flex-1 min-w-0 flex flex-col gap-0.5 px-4 py-2 text-left"
+						>
+							<span class="text-xs text-[var(--color-text)] font-[var(--font-body)] truncate group-hover/hist:text-[var(--color-accent)] transition-colors">
+								{item.sql.slice(0, 60)}{item.sql.length > 60 ? '…' : ''}
+							</span>
+							<span class="text-[10px] text-[var(--color-muted)] font-[var(--font-ui)]">
+								{relativeTime(item.ran_at)}
+							</span>
+						</button>
+
+						<!-- delete-this-history-item — only visible on row hover -->
+						<button
+							type="button"
+							onclick={(e) => { e.stopPropagation(); deleteHistory(item.id); }}
+							aria-label="Delete history item"
+							class="
+								shrink-0 w-[14px] h-[14px] mr-3 rounded
+								flex items-center justify-center
+								opacity-0 group-hover/hist:opacity-100
+								text-[var(--color-muted)] hover:text-[var(--color-danger)]
+								transition-opacity transition-colors
+							"
+						>
+							<X size={11} />
+						</button>
+					</div>
 				{/each}
 			{/if}
 		</div>

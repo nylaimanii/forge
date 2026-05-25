@@ -26,6 +26,10 @@
 	let running = $state(false);
 
 	let history = $derived($demoData.queryHistoryByProject[projectId ?? ''] ?? []);
+	// display-only dedup: collapse consecutive identical sql
+	let displayHistory = $derived(
+		history.filter((item, i) => i === 0 || item.sql !== history[i - 1].sql),
+	);
 
 	onMount(async () => {
 		const loader = (await import('@monaco-editor/loader')).default;
@@ -81,7 +85,7 @@
 			</p>
 		</div>
 		<div class="flex-1 overflow-y-auto py-2">
-			{#each history as item}
+			{#each displayHistory as item}
 				<button
 					onclick={() => loadHistory(item)}
 					class="w-full text-left px-4 py-2.5 hover:bg-white/5 transition-colors"

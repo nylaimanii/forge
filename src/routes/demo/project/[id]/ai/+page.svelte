@@ -259,9 +259,10 @@
 							onclick={handleExplain}
 							disabled={explainLoading || !generatedSQL}
 							class="flex items-center gap-1.5 px-3 h-8 rounded-lg
-								border border-[var(--color-border)]
+								border border-[var(--color-border)] bg-transparent
 								text-xs text-[var(--color-muted)] font-[var(--font-ui)]
-								disabled:opacity-50 hover:text-[var(--color-text)] hover:border-[var(--color-border-active)]
+								disabled:opacity-50
+								hover:text-[var(--color-text)] hover:bg-[var(--color-surface-2)] hover:border-[var(--color-border-active)]
 								transition-all"
 						>
 							{#if explainLoading}
