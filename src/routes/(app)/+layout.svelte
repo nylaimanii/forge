@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 	import type { LayoutData } from './$types';
 	import Sidebar from '$components/layout/Sidebar.svelte';
 	import TopBar from '$components/layout/TopBar.svelte';
@@ -7,11 +7,14 @@
 	import KeyboardShortcutsModal from '$components/ui/KeyboardShortcutsModal.svelte';
 	import Toast from '$components/ui/Toast.svelte';
 	import { user, breadcrumbs } from '$lib/stores';
+	import { createBrowserSupabase } from '$lib/supabase';
 
 	let { data, children }: { data: LayoutData; children: import('svelte').Snippet } = $props();
 
 	let paletteOpen   = $state(false);
 	let shortcutsOpen = $state(false);
+
+	let refreshInterval: ReturnType<typeof setInterval>;
 
 	onMount(() => {
 		if (data.session?.user) {
@@ -19,6 +22,35 @@
 		}
 		// command palette dispatches this event when "Keyboard Shortcuts" is selected
 		window.addEventListener('forge:shortcuts', () => { shortcutsOpen = true; });
+
+		// ── session keepalive ────────────────────────────────────────────────
+		// supabase JWT defaults to 1hr; refresh tokens live ~7 days. on an idle
+		// tab the auto-refresh inside supabase-js sometimes misses its window
+		// and the user gets kicked. nudge it ourselves every 4 minutes, AND
+		// immediately when the tab becomes visible again.
+		const supabase = createBrowserSupabase();
+
+		async function handleVisibilityChange() {
+			if (document.visibilityState === 'visible') {
+				const { error } = await supabase.auth.refreshSession();
+				if (error) console.warn('session refresh (visibility) failed:', error.message);
+			}
+		}
+
+		document.addEventListener('visibilitychange', handleVisibilityChange);
+
+		refreshInterval = setInterval(async () => {
+			const { error } = await supabase.auth.refreshSession();
+			if (error) console.warn('session refresh failed:', error.message);
+		}, 4 * 60 * 1000); // every 4 minutes
+
+		return () => {
+			document.removeEventListener('visibilitychange', handleVisibilityChange);
+		};
+	});
+
+	onDestroy(() => {
+		clearInterval(refreshInterval);
 	});
 
 	function handleKey(e: KeyboardEvent) {
