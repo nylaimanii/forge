@@ -254,36 +254,30 @@
 				</p>
 			{:else}
 				{#each displayHistory as item (item.id)}
-					<div class="group/hist relative hover:bg-white/5 transition-colors border-b border-[var(--color-border)]/40">
+					<div class="group/hist relative flex items-center border-b border-[var(--color-border)]/40">
 						<button
 							type="button"
 							onclick={() => loadSQL(item.sql)}
-							class="w-full text-left flex flex-col gap-0.5 px-4 py-2 pr-8"
+							class="w-full text-left px-4 py-2.5 pr-8 hover:bg-white/5 transition-colors"
 						>
-							<span class="text-xs text-[var(--color-text)] font-[var(--font-body)] truncate group-hover/hist:text-[var(--color-accent)] transition-colors">
-								{item.sql.slice(0, 60)}{item.sql.length > 60 ? '…' : ''}
-							</span>
-							<span class="text-[10px] text-[var(--color-muted)] font-[var(--font-ui)]">
-								{relativeTime(item.ran_at)}
-							</span>
+							<p class="text-xs font-[var(--font-ui)] text-[var(--color-text)] truncate">
+								{(item as { question?: string }).question ?? 'query'}
+							</p>
+							<p class="text-[10px] font-[var(--font-body)] text-[var(--color-muted)] truncate mt-0.5">
+								{item.sql}
+							</p>
 						</button>
-
-						<!-- delete-this-history-item — absolutely positioned, fades in on row hover -->
 						<button
-							type="button"
 							onclick={(e) => { e.stopPropagation(); deleteHistory(item.id); }}
-							class="
-								absolute right-2 top-1/2 -translate-y-1/2
+							class="absolute right-2 top-1/2 -translate-y-1/2
 								opacity-0 group-hover/hist:opacity-100
-								w-4 h-4 flex items-center justify-center rounded
-								text-[var(--color-muted)] hover:text-[var(--color-danger)]
-								transition-all
-							"
+								w-5 h-5 flex items-center justify-center
+								rounded text-[var(--color-muted)]
+								hover:text-[var(--color-danger)]
+								transition-all text-[11px]"
 							title="delete"
 							aria-label="delete history item"
-						>
-							<X size={11} />
-						</button>
+						>✕</button>
 					</div>
 				{/each}
 			{/if}
