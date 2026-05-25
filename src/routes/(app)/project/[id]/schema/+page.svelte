@@ -9,6 +9,7 @@
 	import SQLExportModal from '$components/schema/SQLExportModal.svelte';
 	import Button from '$components/ui/Button.svelte';
 	import { showToast } from '$lib/stores/toasts';
+	import { createBrowserSupabase } from '$lib/supabase';
 	import type { SchemaTable, SchemaField } from '$components/schema/TableCard.svelte';
 
 	interface Relationship {
@@ -153,6 +154,78 @@
 
 	function handleFieldSave(tableId: string, fields: SchemaField[]) {
 		tables = tables.map((t) => t.id === tableId ? { ...t, fields } : t);
+
+		// best-effort: also create / refresh the real postgres table so the
+		// SQL tab can actually query it. never blocks the metadata save.
+		const table = tables.find((t) => t.id === tableId);
+		if (!table || fields.length === 0) return;
+		void syncDDL(buildCreateDDL(table.name, fields), 'table synced to database');
+	}
+
+	// ── rename table (metadata + postgres) ──────────────────────────────────
+	async function renameTable(tableId: string, newName: string) {
+		const table   = tables.find((t) => t.id === tableId);
+		if (!table) return;
+		const oldName = table.name;
+		const clean   = newName.trim();
+		if (!clean || clean === oldName) return;
+
+		// optimistic local update so the card reflects the new name right away
+		tables = tables.map((t) => t.id === tableId ? { ...t, name: clean } : t);
+
+		const supabase = createBrowserSupabase();
+		const { error } = await supabase
+			.from('schema_tables')
+			.update({ name: clean })
+			.eq('id', tableId);
+
+		if (error) {
+			// revert + surface the error; metadata save never silently fails
+			tables = tables.map((t) => t.id === tableId ? { ...t, name: oldName } : t);
+			showToast('failed to rename table', 'error');
+			return;
+		}
+
+		// best-effort postgres rename. metadata save already succeeded.
+		void syncDDL(`ALTER TABLE IF EXISTS ${oldName} RENAME TO ${clean}`, 'table renamed in database');
+	}
+
+	// ── DDL helpers ─────────────────────────────────────────────────────────
+	function buildCreateDDL(tableName: string, fields: SchemaField[]): string {
+		const cols = fields.map((f) => {
+			const t = (f.type ?? 'text').toUpperCase();
+			const sqlType =
+				t === 'INTEGER'                       ? 'integer' :
+				t === 'FLOAT' || t === 'NUMERIC'      ? 'numeric' :
+				t === 'BOOLEAN' || t === 'BOOL'       ? 'boolean' :
+				                                        'text';
+			const nullable = f.is_nullable ? '' : ' NOT NULL';
+			const pk       = f.is_primary  ? ' PRIMARY KEY' : '';
+			return `  ${f.name} ${sqlType}${pk}${nullable}`;
+		}).join(',\n');
+		return `CREATE TABLE IF NOT EXISTS ${tableName} (\n${cols}\n)`;
+	}
+
+	// project id lives on the layout's data
+	let projectId = $derived((data as any).project?.id ?? '');
+
+	async function syncDDL(sql: string, successMsg: string) {
+		if (!sql) return;
+		try {
+			const res     = await fetch('/api/sql/mutate', {
+				method:  'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body:    JSON.stringify({ sql, projectId }),
+			});
+			const payload = await res.json().catch(() => ({}));
+			if (!res.ok || payload.error) {
+				showToast('schema saved, but db sync failed', 'info');
+				return;
+			}
+			showToast(successMsg, 'success');
+		} catch {
+			showToast('schema saved, but db sync failed', 'info');
+		}
 	}
 
 	function handleDeleteTable(tableId: string) {
@@ -363,6 +436,7 @@
 				{drawMode}
 				highlightFieldId={pendingFrom?.tableId === table.id ? pendingFrom.fieldId : null}
 				onfieldclick={handleFieldClick}
+				onrename={(newName) => renameTable(table.id, newName)}
 			/>
 		{/each}
 	</div>

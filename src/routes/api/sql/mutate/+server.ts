@@ -1,9 +1,11 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
-// DML endpoint: allows INSERT, UPDATE, DELETE (not SELECT — use /api/sql/run for that).
+// Mutation endpoint: allows DML (INSERT, UPDATE, DELETE, WITH) plus the
+// minimal DDL the visual schema builder needs to sync to real postgres
+// (CREATE TABLE IF NOT EXISTS, ALTER TABLE ... RENAME TO).
 // Still requires an authenticated session and runs through the execute_sql RPC.
-const ALLOWED = new Set(['INSERT', 'UPDATE', 'DELETE', 'WITH']);
+const ALLOWED = new Set(['INSERT', 'UPDATE', 'DELETE', 'WITH', 'CREATE', 'ALTER']);
 
 export const POST: RequestHandler = async ({ request, locals }) => {
 	if (!locals.session) {
@@ -22,7 +24,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
 	const firstWord = sql.replace(/\/\*[\s\S]*?\*\/|--[^\n]*/g, '').trim().split(/\s+/)[0].toUpperCase();
 	if (!ALLOWED.has(firstWord)) {
-		return json({ error: 'only INSERT, UPDATE, DELETE allowed via this endpoint' }, { status: 400 });
+		return json({ error: 'only INSERT, UPDATE, DELETE, CREATE, ALTER allowed via this endpoint' }, { status: 400 });
 	}
 
 	const { data, error } = await locals.supabase.rpc('execute_sql', { query: sql });

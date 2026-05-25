@@ -28,9 +28,10 @@
 		drawMode?:          boolean;
 		highlightFieldId?:  string | null;
 		onfieldclick?:      (payload: { tableId: string; fieldId: string }) => void;
+		onrename?:          (newName: string) => void;
 	}
 
-	let { table, selected, onheadermousedown, onselect, onaddfield, drawMode = false, highlightFieldId = null, onfieldclick }: Props = $props();
+	let { table, selected, onheadermousedown, onselect, onaddfield, drawMode = false, highlightFieldId = null, onfieldclick, onrename }: Props = $props();
 
 	// pick a deterministic accent color from the table name
 	const PALETTE = ['#6c63ff', '#00f5d4', '#ff4d6d', '#ffb84d', '#7dd87d', '#b784ff'];
@@ -43,6 +44,25 @@
 
 	let dotColor = $derived(tableColor(table.name));
 	let sortedFields = $derived([...table.fields].sort((a, b) => a.position - b.position));
+
+	// ── inline name editing ──────────────────────────────────────────────────
+	let editingName = $state(false);
+	let editedName  = $state('');
+
+	// keep the local buffer in sync when the table prop changes from outside
+	$effect(() => {
+		if (!editingName) editedName = table.name;
+	});
+
+	function commitRename() {
+		editingName = false;
+		const clean = editedName.trim();
+		if (!clean || clean === table.name) {
+			editedName = table.name;
+			return;
+		}
+		onrename?.(clean);
+	}
 </script>
 
 <!-- absolutely positioned inside the canvas layer -->
@@ -79,9 +99,28 @@
 			class="w-2 h-2 rounded-full shrink-0"
 			style="background: {dotColor}; box-shadow: 0 0 6px {dotColor}80"
 		></span>
-		<span class="text-sm font-bold text-[var(--color-text)] font-[var(--font-display)] truncate flex-1">
-			{table.name}
-		</span>
+		<!-- inline-editable name. looks like text until focused. -->
+		<input
+			type="text"
+			bind:value={editedName}
+			onfocus={() => (editingName = true)}
+			onblur={commitRename}
+			onkeydown={(e) => {
+				if (e.key === 'Enter')  { e.preventDefault(); (e.currentTarget as HTMLInputElement).blur(); }
+				if (e.key === 'Escape') { editedName = table.name; (e.currentTarget as HTMLInputElement).blur(); }
+			}}
+			onmousedown={(e) => e.stopPropagation()}
+			onclick={(e) => e.stopPropagation()}
+			spellcheck="false"
+			class="
+				text-sm font-bold text-[var(--color-text)] font-[var(--font-display)] truncate flex-1
+				bg-transparent outline-none cursor-text
+				border border-transparent rounded px-1 -mx-1 min-w-0
+				focus:border-[var(--color-border-active)] focus:bg-[var(--color-surface-3)]/40
+				hover:border-[var(--color-border)]
+				transition-colors
+			"
+		/>
 	</div>
 
 	<!-- field list -->
