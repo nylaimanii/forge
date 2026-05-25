@@ -258,12 +258,12 @@
 						<button
 							onclick={handleExplain}
 							disabled={explainLoading || !generatedSQL}
-							class="flex items-center gap-1.5 px-3 h-8 rounded-lg
-								border border-[var(--color-border)] bg-transparent
+							style="border: 1px solid var(--color-border); background: transparent; padding: 6px 14px; border-radius: 8px;"
+							class="flex items-center gap-1.5 h-8
 								text-xs text-[var(--color-muted)] font-[var(--font-ui)]
 								disabled:opacity-50
-								hover:text-[var(--color-text)] hover:bg-[var(--color-surface-2)] hover:border-[var(--color-border-active)]
-								transition-all"
+								hover:text-[var(--color-text)] hover:bg-[var(--color-surface-2)]
+								transition-colors"
 						>
 							{#if explainLoading}
 								<svg class="animate-spin w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">

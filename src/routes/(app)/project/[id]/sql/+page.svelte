@@ -254,16 +254,11 @@
 				</p>
 			{:else}
 				{#each displayHistory as item (item.id)}
-					<div
-						class="
-							group/hist relative flex items-center gap-1
-							hover:bg-white/5 transition-colors border-b border-[var(--color-border)]/40
-						"
-					>
+					<div class="group/hist relative hover:bg-white/5 transition-colors border-b border-[var(--color-border)]/40">
 						<button
 							type="button"
 							onclick={() => loadSQL(item.sql)}
-							class="flex-1 min-w-0 flex flex-col gap-0.5 px-4 py-2 text-left"
+							class="w-full text-left flex flex-col gap-0.5 px-4 py-2 pr-8"
 						>
 							<span class="text-xs text-[var(--color-text)] font-[var(--font-body)] truncate group-hover/hist:text-[var(--color-accent)] transition-colors">
 								{item.sql.slice(0, 60)}{item.sql.length > 60 ? '…' : ''}
@@ -273,18 +268,19 @@
 							</span>
 						</button>
 
-						<!-- delete-this-history-item — only visible on row hover -->
+						<!-- delete-this-history-item — absolutely positioned, fades in on row hover -->
 						<button
 							type="button"
 							onclick={(e) => { e.stopPropagation(); deleteHistory(item.id); }}
-							aria-label="Delete history item"
 							class="
-								shrink-0 w-[14px] h-[14px] mr-3 rounded
-								flex items-center justify-center
+								absolute right-2 top-1/2 -translate-y-1/2
 								opacity-0 group-hover/hist:opacity-100
+								w-4 h-4 flex items-center justify-center rounded
 								text-[var(--color-muted)] hover:text-[var(--color-danger)]
-								transition-opacity transition-colors
+								transition-all
 							"
+							title="delete"
+							aria-label="delete history item"
 						>
 							<X size={11} />
 						</button>

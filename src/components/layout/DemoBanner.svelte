@@ -4,7 +4,17 @@
   import { X } from 'lucide-svelte';
 </script>
 
-<div style="position:fixed; top:0; left:0; right:0; height:40px; z-index:50; display:flex; align-items:center; justify-content:space-between; padding:0 16px; background:linear-gradient(90deg, rgba(79,142,247,0.9) 0%, rgba(79,142,247,0.7) 100%); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); border-bottom:1px solid rgba(79,142,247,0.4); color:white; font-size:11px; font-family:var(--font-ui);">
+<div style="
+  position:fixed; top:0; left:0; right:0; height:40px; z-index:50;
+  display:flex; align-items:center; justify-content:space-between; padding:0 16px;
+  background: linear-gradient(90deg,
+    rgba(79,142,247,0.95) 0%,
+    rgba(99,102,241,0.85) 100%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(79,142,247,0.35);
+  color:white; font-size:11px; font-family:var(--font-ui);
+">
   <!-- exit -->
   <button
     onclick={() => { isDemoMode.set(false); goto('/'); }}
