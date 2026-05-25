@@ -56,8 +56,8 @@
   role="application"
   aria-label="Schema canvas"
 >
-  <div class="absolute inset-0 opacity-[0.025] pointer-events-none"
-    style="background-image: radial-gradient(circle, rgba(241,245,249,0.8) 1px, transparent 1px); background-size: 28px 28px;"
+  <div class="absolute inset-0 pointer-events-none"
+    style="background-image: radial-gradient(circle, rgba(255,255,255,0.12) 1px, transparent 1px); background-size: 24px 24px;"
   ></div>
 
   <div class="absolute origin-top-left"

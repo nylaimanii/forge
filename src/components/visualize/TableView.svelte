@@ -108,6 +108,24 @@
 	const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 	function isUUID(v: string): boolean { return UUID_RE.test(v); }
 
+	// ── status badge styling ──────────────────────────────────────────────────
+	const BADGE_COLS = new Set(['status', 'published', 'type', 'category', 'role', 'state']);
+
+	function getStatusStyle(val: unknown): string {
+		const v = String(val).toLowerCase();
+		if (['active', 'published', 'delivered', 'confirmed'].includes(v))
+			return 'background:rgba(52,211,153,0.15); color:#34d399; border:1px solid rgba(52,211,153,0.3);';
+		if (['critical', 'urgent', 'cancelled', 'error'].includes(v))
+			return 'background:rgba(251,113,133,0.15); color:#fb7185; border:1px solid rgba(251,113,133,0.3);';
+		if (['discharged', 'processing', 'pending', 'draft'].includes(v))
+			return 'background:rgba(148,163,184,0.15); color:#94a3b8; border:1px solid rgba(148,163,184,0.3);';
+		if (val === true  || val === 'true'  || v === 'yes')
+			return 'background:rgba(52,211,153,0.15); color:#34d399; border:1px solid rgba(52,211,153,0.3);';
+		if (val === false || val === 'false' || v === 'no')
+			return 'background:rgba(251,113,133,0.15); color:#fb7185; border:1px solid rgba(251,113,133,0.3);';
+		return '';
+	}
+
 	// ── CSV export ────────────────────────────────────────────────────────────
 	function exportCSV() {
 		if (columns.length === 0) return;
@@ -297,13 +315,19 @@
 							<td class="px-3 py-2 border-b border-[var(--color-border)]/50 text-[var(--color-text)] max-w-[300px]">
 								{#if raw === null || raw === undefined}
 									<span class="italic text-[var(--color-muted)]">null</span>
-								{:else if typeof raw === 'boolean'}
-									<span class="
-										inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold
-										{raw ? 'text-emerald-400 bg-emerald-400/10' : 'text-red-400 bg-red-400/10'}
-									">
-										{raw ? 'true' : 'false'}
-									</span>
+								{:else if (BADGE_COLS.has(col.toLowerCase()) || typeof raw === 'boolean') && getStatusStyle(raw)}
+									<span
+										style="
+											{getStatusStyle(raw)}
+											padding:2px 8px;
+											border-radius:9999px;
+											font-size:10px;
+											font-weight:600;
+											letter-spacing:0.05em;
+											text-transform:uppercase;
+											font-family:var(--font-ui);
+										"
+									>{String(raw)}</span>
 								{:else if typeof raw === 'string' && isUUID(raw)}
 									<Tooltip label={raw} position="top">
 										<span class="font-[var(--font-body)] cursor-help">{raw.slice(0, 8)}…</span>

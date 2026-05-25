@@ -133,9 +133,12 @@
 
 	<!-- ── LEFT SIDEBAR: form list ────────────────────────────────────────── -->
 	<aside class="w-[220px] shrink-0 flex flex-col border-r border-[var(--color-border)] bg-[var(--color-surface-1)] overflow-y-auto">
-		<div class="shrink-0 px-4 pt-5 pb-3 flex items-center justify-between">
+		<div class="shrink-0 px-4 pt-5 pb-2">
 			<h2 class="text-sm font-bold text-[var(--color-text)] font-[var(--font-display)]">forms</h2>
-			<!-- create new form via server action -->
+		</div>
+
+		<!-- prominent create button pinned above the list -->
+		<div class="shrink-0 px-3 pb-3">
 			<form method="POST" action="?/createForm" use:enhance={({ }) => {
 				return async ({ result }) => {
 					if (result.type === 'success' && result.data?.form) {
@@ -148,10 +151,15 @@
 			}}>
 				<button
 					type="submit"
-					class="w-7 h-7 rounded-lg flex items-center justify-center bg-[var(--color-electric-dim)] text-[var(--color-electric)] hover:bg-[var(--color-electric)]/20 transition-colors"
-					aria-label="New form"
+					class="
+						flex items-center gap-1.5 w-full px-3 py-2 rounded-lg
+						border border-[var(--color-border)] hover:border-[var(--color-electric)]/40
+						bg-transparent hover:bg-[var(--color-electric-dim)]
+						text-xs font-[var(--font-ui)] text-[var(--color-muted)] hover:text-[var(--color-electric)]
+						transition-colors
+					"
 				>
-					<Plus size={14} />
+					<Plus size={13} /> new form
 				</button>
 			</form>
 		</div>
