@@ -1,5 +1,5 @@
 /* ─── google fonts ──────────────────────────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
 /* ─── tailwind v4 ───────────────────────────────────────────────────────────── */
 @import "tailwindcss";
@@ -38,9 +38,10 @@
   --color-subtle: #1e293b;
 
   /* typography */
-  --font-display: 'Space Grotesk', system-ui, sans-serif;
-  --font-body:    'Space Mono', 'Courier New', monospace;
-  --font-ui:      'Inter', system-ui, sans-serif;
+  --font-display: 'Syne', sans-serif;
+  --font-ui:      'DM Sans', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
 
   /* radii */
   --radius-sm:  4px;
