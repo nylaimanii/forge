@@ -258,7 +258,7 @@
 						<button
 							onclick={handleExplain}
 							disabled={explainLoading || !generatedSQL}
-							style="border: 1px solid var(--color-border); background: transparent; padding: 6px 14px; border-radius: 8px;"
+							style="border: 1px solid rgba(255,255,255,0.18); background: transparent; padding: 6px 14px; border-radius: 8px;"
 							class="flex items-center gap-1.5 h-8
 								text-xs text-[var(--color-muted)] font-[var(--font-ui)]
 								disabled:opacity-50

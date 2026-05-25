@@ -244,7 +244,7 @@
 							size="sm"
 							onclick={handleExplain}
 							disabled={explainLoading || !generatedSQL}
-							class="border border-[var(--color-border)]"
+							class="border border-[rgba(255,255,255,0.18)]"
 						>
 							{#snippet icon()}
 								{#if explainLoading}
