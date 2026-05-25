@@ -80,15 +80,23 @@
 		saving      = true;
 		serverError = '';
 
+		// capture the id at submit time — if the user switches tables before
+		// the response lands, we still attach the saved fields to the right
+		// table in local state.
+		const submittedTableId = table?.id ?? '';
+
 		return async ({ result }: { result: import('@sveltejs/kit').ActionResult }) => {
 			saving = false;
 			if (result.type === 'success' && result.data?.fields) {
 				showToast('schema saved', 'success');
-				onsave(table!.id, result.data.fields as SchemaField[]);
+				onsave(submittedTableId, result.data.fields as SchemaField[]);
 			} else if (result.type === 'failure') {
-				serverError = (result.data?.error as string) ?? 'save failed';
+				const msg = (result.data?.error as string) ?? 'save failed';
+				serverError = msg;
+				console.error('FieldEditor saveFields failure:', msg, result.data);
 			} else if (result.type === 'error') {
 				serverError = 'unexpected error — try again';
+				console.error('FieldEditor saveFields error:', result.error);
 			}
 		};
 	}

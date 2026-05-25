@@ -123,54 +123,71 @@ export const actions: Actions = {
 		const tableId    = (form.get('table_id') as string) ?? '';
 		const fieldsJson = (form.get('fields')   as string) ?? '[]';
 
-		if (!tableId) return fail(400, { error: 'table_id required' });
+		if (!tableId) {
+			console.error('saveFields: missing table_id');
+			return fail(400, { error: 'table_id required' });
+		}
 
 		let fields: { name: string; type: string; is_primary: boolean; is_nullable: boolean }[];
 		try {
 			fields = JSON.parse(fieldsJson);
 		} catch {
+			console.error('saveFields: invalid fields json', fieldsJson?.slice(0, 200));
 			return fail(400, { error: 'invalid fields json' });
 		}
 
-		const { data: tableRow } = await locals.supabase
+		const { data: tableRow, error: tableErr } = await locals.supabase
 			.from('schema_tables')
 			.select('id')
 			.eq('id', tableId)
 			.eq('user_id', locals.session!.user.id)
 			.single();
 
-		if (!tableRow) return fail(403, { error: 'not authorised' });
+		if (tableErr || !tableRow) {
+			console.error('saveFields: ownership check failed', JSON.stringify({ tableId, tableErr }));
+			return fail(403, { error: 'not authorised' });
+		}
 
 		const { error: deleteError } = await locals.supabase
 			.from('schema_fields')
 			.delete()
 			.eq('table_id', tableId);
 
-		if (deleteError) return fail(500, { error: deleteError.message });
-
-		if (fields.length > 0) {
-			const { error: insertError } = await locals.supabase
-				.from('schema_fields')
-				.insert(
-					fields.map((f, i) => ({
-						table_id:    tableId,
-						project_id:  params.id,
-						name:        f.name       || `field_${i + 1}`,
-						type:        f.type       || 'text',
-						is_primary:  f.is_primary  ?? false,
-						is_nullable: f.is_nullable ?? true,
-						position:    i,
-					}))
-				);
-
-			if (insertError) return fail(500, { error: insertError.message });
+		if (deleteError) {
+			console.error('saveFields: delete failed', JSON.stringify(deleteError));
+			return fail(500, { error: deleteError.message });
 		}
 
-		const { data: newFields } = await locals.supabase
+		if (fields.length > 0) {
+			const rows = fields.map((f, i) => ({
+				table_id:    tableId,
+				project_id:  params.id,
+				name:        f.name       || `field_${i + 1}`,
+				type:        f.type       || 'text',
+				is_primary:  f.is_primary  ?? false,
+				is_nullable: f.is_nullable ?? true,
+				position:    i,
+			}));
+
+			const { error: insertError } = await locals.supabase
+				.from('schema_fields')
+				.insert(rows);
+
+			if (insertError) {
+				console.error('saveFields: insert failed', JSON.stringify({ insertError, rowCount: rows.length, tableId, projectId: params.id }));
+				return fail(500, { error: insertError.message });
+			}
+		}
+
+		const { data: newFields, error: refetchError } = await locals.supabase
 			.from('schema_fields')
 			.select('id, name, type, is_primary, is_nullable, position')
 			.eq('table_id', tableId)
 			.order('position', { ascending: true });
+
+		if (refetchError) {
+			console.error('saveFields: refetch failed', JSON.stringify(refetchError));
+		}
 
 		return { success: true, fields: newFields ?? [] };
 	},
